@@ -217,7 +217,7 @@
 
         function handleMobileNav(pageId) { switchPage(pageId); toggleMobileMenu(); }
 
-function setupBannerCarousel(banners) {
+        function setupBannerCarousel(banners) {
             const track = document.getElementById('banner-track');
             const dotsContainer = document.getElementById('banner-dots');
             if(!track || !dotsContainer) return;
@@ -376,7 +376,6 @@ function setupBannerCarousel(banners) {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // 核心表单提交智能拦截拦截函数
         document.getElementById('coform')?.addEventListener('submit', async function(e) {
             e.preventDefault();
             const name = document.getElementById('form-name').value;
@@ -389,7 +388,6 @@ function setupBannerCarousel(banners) {
             params.append('message', message);
             
             try {
-                // 1. 尝试使用后台 API (data.js 对应的 Live 路由路径) 进行无感上传
                 const response = await fetch('/api/data', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -400,19 +398,15 @@ function setupBannerCarousel(banners) {
                     alert('✨ 您的共创想法已成功送达飞书数据库，团队将尽快与您取得联系！');
                     this.reset();
                 } else {
-                    // 2. 如果你的网站目前只是纯静态 GitHub Pages (无法运行后端 JavaScript 节点)
-                    // 自动安全降级为直接唤起飞书原生官方填写表单，保障输入信息绝不遗失！
                     alert('正在为您接入飞书官方高安全登记通道...');
                     window.open('https://xcn3g3vxlg7p.feishu.cn/share/base/form/shrcnYlsYdZ95Xry5W8ndaLDxgb', '_blank');
                 }
             } catch (err) {
-                // 3. 各种网络异常报错的极端情况，统一开启兜底大门
                 window.open('https://xcn3g3vxlg7p.feishu.cn/share/base/form/shrcnYlsYdZ95Xry5W8ndaLDxgb', '_blank');
             }
         });
 
         async function init() {
-            // 优先链路：读取 Vercel 等全栈平台提供的实时动态接口
             try {
                 const res = await fetch('/api/data');
                 if (res.ok) {
@@ -424,7 +418,6 @@ function setupBannerCarousel(banners) {
                 }
             } catch (e) {}
 
-            // 次优链路：读取由 GitHub Actions 脚本生成的静态 data.json
             try {
                 const res = await fetch('./api/data.json');
                 if (res.ok) {
@@ -436,7 +429,6 @@ function setupBannerCarousel(banners) {
                 }
             } catch (e) {}
             
-            // 绝不上演“空白窗”：提供高档视觉样板垫底
             renderAllContent(defaultMockData);
         }
         window.onload = init;
