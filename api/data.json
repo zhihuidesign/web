@@ -1,0 +1,67 @@
+{
+    "settings": {},
+    "banners": [
+        {
+            "id": "",
+            "title": "",
+            "image": ""
+        },
+        {
+            "id": "",
+            "title": "",
+            "image": ""
+        },
+        {
+            "id": "",
+            "title": "",
+            "image": ""
+        }
+    ],
+    "cases": [
+        {
+            "id": "",
+            "title": "",
+            "category": "",
+            "tag": "",
+            "desc": "",
+            "images": "",
+            "featured": false
+        },
+        {
+            "id": "",
+            "title": "",
+            "category": "",
+            "tag": "",
+            "desc": "",
+            "images": "",
+            "featured": false
+        },
+        {
+            "id": "",
+            "title": "",
+            "category": "",
+            "tag": "",
+            "desc": "",
+            "images": "",
+            "featured": false
+        },
+        {
+            "id": "",
+            "title": "",
+            "category": "",
+            "tag": "",
+            "desc": "",
+            "images": "",
+            "featured": false
+        },
+        {
+            "id": "",
+            "title": "",
+            "category": "",
+            "tag": "",
+            "desc": "",
+            "images": "",
+            "featured": false
+        }
+    ]
+}
