@@ -29,9 +29,7 @@ jobs:
         env:
           FEISHU_APP_ID: ${{ secrets.FEISHU_APP_ID }}
           FEISHU_APP_SECRET: ${{ secrets.FEISHU_APP_SECRET }}
-        run: |
-          # [这里保留你原本的 Python 脚本逻辑，确保它能生成 api/data.json]
-          python your_fetch_script.py 
+        run: python sync.py
 
       - name: Commit and Push
         run: |
