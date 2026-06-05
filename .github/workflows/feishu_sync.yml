@@ -7,6 +7,8 @@ on:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 jobs:
   sync-data:
@@ -34,12 +36,10 @@ jobs:
           APP_SECRET = os.environ.get("FEISHU_APP_SECRET")
           BASE_ID = "L3gAbHr0vaDklls2gfQcjdEmnjf"
           
-          # 1. 获取飞书 Token
           res = requests.post("https://open.feishu.cn/open-apis/auth/v3/tenant_access_token/internal", json={"app_id": APP_ID, "app_secret": APP_SECRET})
           token = res.json().get("tenant_access_token")
           headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json; charset=utf-8"}
           
-          # 获取数据封装函数
           def get_records(table_id):
               records = []
               url = f"https://open.feishu.cn/open-apis/bitable/v1/apps/{BASE_ID}/tables/{table_id}/records?page_size=100"
@@ -56,14 +56,26 @@ jobs:
                   except:
                       break
               return [x.get("fields", {}) for x in records]
+
+          def parse_img(val):
+              if not val: return ""
+              if isinstance(val, list) and len(val) > 0:
+                  return val[0].get("tmp_url", "")
+              if isinstance(val, dict):
+                  return val.get("tmp_url", "")
+              return str(val)
+
+          def parse_img_list(val):
+              if not val: return []
+              if isinstance(val, list):
+                  return [x.get("tmp_url", "") for x in val if x.get("tmp_url")]
+              return []
           
-          # 2. 抓取表格
           raw_settings = get_records("tbl4yj6yMn9b6TVB")
           raw_banners = get_records("tbleKDTByw1PG3vB")
           raw_cases = get_records("tblLbJOrvKnT2dHR")
           raw_cocreate = get_records("tbl4z7agZYGzD8G0")
           
-          # 3. 结构化打包
           final_data = {"settings": {}, "banners": [], "cases": []}
           
           for item in raw_settings:
@@ -80,7 +92,7 @@ jobs:
               final_data["banners"].append({
                   "id": str(b.get("ID") or ""),
                   "title": b.get("标题") or "",
-                  "image": b.get("图片") or ""
+                  "image": parse_img(b.get("图片"))
               })
               
           for c in raw_cases:
@@ -90,7 +102,7 @@ jobs:
                   "category": c.get("栏目分类") or "",
                   "tag": c.get("副标题") or "",
                   "desc": c.get("项目描述") or "",
-                  "images": c.get("图片集") or "",
+                  "images": parse_img_list(c.get("图片集")),
                   "featured": bool(c.get("精选推荐", False))
               })
               
@@ -105,3 +117,8 @@ jobs:
           git config --global user.email "bot@github.com"
           git add api/data.json
           git diff --quiet && git diff --staged --quiet || (git commit -m "Automated Feishu data refresh" && git push)
+
+      # 🌟 新增核心工序：强行通知并唤醒 GitHub 网页发布程序
+      - name: Trigger GitHub Pages Deployment
+        uses: actions/deploy-pages@v2
+        if: always()
