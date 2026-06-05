@@ -55,18 +55,40 @@ jobs:
                       break
               return [x.get("fields", {}) for x in records]
 
+          # 【超级防崩溃核心：强行将飞书任何古怪数据降维转换成纯文本字符串】
+          def parse_text(val):
+              if not val: return ""
+              if isinstance(val, list):
+                  res = []
+                  for x in val:
+                      if isinstance(x, dict):
+                          res.append(str(x.get("text") or x.get("link") or ""))
+                      else:
+                          res.append(str(x))
+                  return "".join(res).strip()
+              if isinstance(val, dict):
+                  return str(val.get("text") or val.get("link") or val)
+              return str(val).strip()
+
           def parse_img(val):
               if not val: return ""
               if isinstance(val, list) and len(val) > 0:
-                  return val[0].get("tmp_url", "")
+                  x = val[0]
+                  if isinstance(x, dict):
+                      return x.get("tmp_url") or x.get("url") or ""
               if isinstance(val, dict):
-                  return val.get("tmp_url", "")
+                  return val.get("tmp_url") or val.get("url") or ""
               return str(val)
 
           def parse_img_list(val):
               if not val: return []
               if isinstance(val, list):
-                  return [x.get("tmp_url", "") for x in val if x.get("tmp_url")]
+                  res = []
+                  for x in val:
+                      if isinstance(x, dict):
+                          url = x.get("tmp_url") or x.get("url")
+                          if url: res.append(url)
+                  return res
               return []
           
           raw_settings = get_records("tbl4yj6yMn9b6TVB")
@@ -76,31 +98,30 @@ jobs:
           
           final_data = {"settings": {}, "banners": [], "cases": []}
           
-          # 【核心修复：对齐厂长的“键名”与“内容值”】
           for item in raw_settings:
-              k = item.get("键名")
-              v = item.get("内容值")
+              k = parse_text(item.get("键名"))
+              v = parse_text(item.get("内容值"))
               if k: final_data["settings"][k] = v
               
           for item in raw_cocreate:
-              k = item.get("键名")
-              v = item.get("内容值")
+              k = parse_text(item.get("键名"))
+              v = parse_text(item.get("内容值"))
               if k: final_data["settings"][k] = v
               
           for b in raw_banners:
               final_data["banners"].append({
-                  "id": str(b.get("ID") or ""),
-                  "title": b.get("标题") or "",
+                  "id": parse_text(b.get("ID")),
+                  "title": parse_text(b.get("标题")),
                   "image": parse_img(b.get("图片"))
               })
               
           for c in raw_cases:
               final_data["cases"].append({
-                  "id": str(c.get("编号") or ""),
-                  "title": c.get("项目标题") or "",
-                  "category": c.get("栏目分类") or "",
-                  "tag": c.get("副标题") or "",
-                  "desc": c.get("项目描述") or "",
+                  "id": parse_text(c.get("编号")),
+                  "title": parse_text(c.get("项目标题")),
+                  "category": parse_text(c.get("栏目分类")),
+                  "tag": parse_text(c.get("副标题")),
+                  "desc": parse_text(c.get("项目描述")),
                   "images": parse_img_list(c.get("图片集")),
                   "featured": bool(c.get("精选推荐", False))
               })
