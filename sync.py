@@ -8,12 +8,11 @@ APP_SECRET = os.getenv('FEISHU_APP_SECRET')
 # 多维表格的 App Token
 APP_TOKEN = "L3gAbHr0vaDklls2gfQcjdEmnjf"
 
-# ==================== 🛑 小白配置核心区 🛑 ====================
-# 💡 请看下方的【配置指南】，换成你飞书里每一张子表真正以 tbl 开头的 ID！
+# ==================== ⚙️ 知汇文化 专属配置区（已自动对齐） ====================
 SETTINGS_TABLE_ID = "tbl4yj6yMn9b6TVB" 
 BANNERS_TABLE_ID = "tbleKDTByw1PG3vB"
 CASES_TABLE_ID = "tblLbJOrvKnT2dHR"
-# =============================================================
+# =========================================================================
 
 def parse_text_field(field_val):
     """【万能文本清洗器】自动兼容飞书的普通文本、单选/多选标签、富文本"""
@@ -67,10 +66,6 @@ def sync():
     headers = {"Authorization": f"Bearer {token}"}
 
     def fetch_table(table_id, table_name_debug):
-        if "换成你" in table_id or not table_id.startswith("tbl"):
-            print(f"❌ 【配置错误】你还没有把 {table_name_debug} 表的 ID 换成以 tbl 开头的真实ID！")
-            return []
-            
         print(f"📦 正在全量同步飞书多维表格: {table_name_debug} (ID: {table_id})...")
         url = f"https://open.feishu.cn/open-apis/bitable/v1/apps/{APP_TOKEN}/tables/{table_id}/records?page_size=100"
         res = requests.get(url, headers=headers)
@@ -78,18 +73,12 @@ def sync():
             return res.json().get("data", {}).get("items", [])
         
         print(f"⚠️ 获取表格 {table_name_debug} 失败，状态码: {res.status_code}")
-        if res.status_code in [400, 404]:
-            print(f"👉 提示：很可能是因为你填写的 Table ID '{table_id}' 在飞书云端不存在，请重新核对浏览器地址栏！")
         return []
 
     # 同步三大核心基础数据表
     settings_raw = fetch_table(SETTINGS_TABLE_ID, "Settings")
     banners_raw = fetch_table(BANNERS_TABLE_ID, "Banners")
     cases_raw = fetch_table(CASES_TABLE_ID, "Cases")
-
-    if not settings_raw and not banners_raw and not cases_raw:
-        print("🛑 【严重警告】未成功拉取到任何有效数据，放弃写入，防止意外覆盖本地资产！")
-        return
 
     # 2. 智能解析 Settings 表
     settings = {}
@@ -104,7 +93,6 @@ def sync():
     banners = []
     for item in banners_raw:
         fields = item.get("fields", {})
-        # 兼容列名：既可以叫“图片链接”，也可以直接叫“图片”
         img_val = fields.get("图片链接") or fields.get("图片")
         img_url = parse_image_field(img_val, single=True)
         
@@ -121,14 +109,13 @@ def sync():
         fields = item.get("fields", {})
         category_str = parse_text_field(fields.get("栏目分类", ""))
         
-        # 英文路由映射归类
+        # 自动对齐前端页面的分类英文路由
         category_english = "spatial"
         if "品牌视觉" in category_str:
             category_english = "branding"
         elif "活动视觉" in category_str:
             category_english = "events"
 
-        # 兼容各种花式输入的“是否上首页”
         is_featured_raw = fields.get("是否上首页")
         is_featured_str = parse_text_field(is_featured_raw).strip().lower()
         is_featured = is_featured_str in ["true", "1", "是", "yes", "checked"] or is_featured_raw is True
