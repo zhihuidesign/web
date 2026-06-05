@@ -17,6 +17,8 @@
     <!-- 顶端大牌导航栏 -->
     <nav class="fixed top-0 left-0 w-full z-50 bg-[#F4F4F4]/90 backdrop-blur-md border-b border-black/5 px-6 py-6 md:px-12 flex justify-between items-center transition-colors duration-300" id="main-nav">
         <a href="#" onclick="switchPage('home')" class="font-heading text-xl md:text-2xl tracking-wider">ZHIHUI CULTURE.</a>
+        
+        <!-- 电脑端常规菜单 -->
         <div class="hidden md:flex space-x-8 font-medium text-sm tracking-wide">
             <a href="#" onclick="switchPage('home')" class="nav-link text-black hover:opacity-50 transition-opacity">工作</a>
             <a href="#" onclick="switchPage('spatial')" class="nav-link text-black hover:opacity-50 transition-opacity">空间场景</a>
@@ -25,7 +27,19 @@
             <a href="#" onclick="switchPage('cocreate')" class="nav-link text-black hover:opacity-50 transition-opacity">知汇共创</a>
             <a href="#" onclick="switchPage('about')" class="nav-link text-black hover:opacity-50 transition-opacity">关于知汇</a>
         </div>
-        <div class="md:hidden text-sm font-bold" onclick="alert('请在电脑端浏览以获得最佳体验')">MENU</div>
+        
+        <!-- 移动端汉堡菜单触控按钮（修复 image_b59f7f.png 的弹窗问题） -->
+        <div class="md:hidden text-sm font-bold cursor-pointer select-none px-3 py-1 border border-black/10 rounded transition-all" id="mobile-menu-btn" onclick="toggleMobileMenu()">MENU</div>
+        
+        <!-- 移动端专属下拉菜单抽屉 -->
+        <div id="mobile-dropdown" class="hidden absolute top-full left-0 w-full bg-[#F4F4F4] border-b border-black/10 flex flex-col px-6 py-4 space-y-2 font-medium text-sm shadow-xl transition-all duration-300">
+            <a href="#" onclick="handleMobileNav('home')" class="mobile-nav-link text-black py-2.5 border-b border-black/5">工作</a>
+            <a href="#" onclick="handleMobileNav('spatial')" class="mobile-nav-link text-black py-2.5 border-b border-black/5">空间场景</a>
+            <a href="#" onclick="handleMobileNav('branding')" class="mobile-nav-link text-black py-2.5 border-b border-black/5">品牌视觉</a>
+            <a href="#" onclick="handleMobileNav('events')" class="mobile-nav-link text-black py-2.5 border-b border-black/5">活动视觉</a>
+            <a href="#" onclick="handleMobileNav('cocreate')" class="mobile-nav-link text-black py-2.5 border-b border-black/5">知汇共创</a>
+            <a href="#" onclick="handleMobileNav('about')" class="mobile-nav-link text-black py-2.5">关于知汇</a>
+        </div>
     </nav>
 
     <!-- 飞书表单隐形接收 -->
@@ -36,17 +50,10 @@
             
             <!-- 工作 SECTION (首页) -->
             <section id="home" class="page-section active">
-                
                 <!-- 升级：现代高端智能轮播广告橱窗 -->
                 <div class="w-full relative overflow-hidden bg-neutral-300 aspect-[21/9] md:aspect-[3/1] border border-black/5 my-4 group" id="banner-slider-wrapper">
-                    <!-- 滚动条轨道 -->
-                    <div id="banner-track" class="flex w-full h-full transition-transform duration-700 ease-[cubic-bezier(0.25,1,0.5,1)]">
-                        <!-- 由 JS 动态无缝渲染多张大牌 Banner -->
-                    </div>
-                    <!-- 右下方极简圆形控制点 -->
-                    <div id="banner-dots" class="absolute bottom-4 right-6 md:bottom-6 md:right-12 z-20 flex space-x-2.5 items-center">
-                        <!-- 由 JS 动态无缝渲染圆点 -->
-                    </div>
+                    <div id="banner-track" class="flex w-full h-full transition-transform duration-700 ease-[cubic-bezier(0.25,1,0.5,1)]"></div>
+                    <div id="banner-dots" class="absolute bottom-4 right-6 md:bottom-6 md:right-12 z-20 flex space-x-2.5 items-center"></div>
                 </div>
                 
                 <div class="text-center my-16 md:my-24 max-w-4xl mx-auto px-4 border-y border-black/5 py-12">
@@ -129,20 +136,16 @@
                 </div>
             </section>
 
-            <!-- 关于知汇 SECTION （完美还原 image_c1f3cc.png 排版样式） -->
+            <!-- 关于知汇 SECTION -->
             <section id="about" class="page-section">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-12 my-12">
-                    <!-- 左侧：完美重构的高级叙事排版 -->
                     <div class="space-y-6">
                         <div>
                             <span class="font-mono text-xs text-black/40 tracking-widest uppercase block mb-2">SUPER INDIVIDUAL MODEL //</span>
                             <h2 id="text-about-heading" class="font-heading text-3xl md:text-5xl leading-tight text-black">加载中...</h2>
                         </div>
-                        <div id="text-about-detail" class="space-y-4 text-black/70 font-light text-sm md:text-base leading-relaxed">
-                            加载中...
-                        </div>
+                        <div id="text-about-detail" class="space-y-4 text-black/70 font-light text-sm md:text-base leading-relaxed">加载中...</div>
                     </div>
-                    <!-- 右侧：商务卡片 -->
                     <div class="border border-black/10 p-8 bg-white flex flex-col justify-between">
                         <div>
                             <h3 class="font-heading text-xl mb-6 uppercase tracking-wider">Business Contact / 商务联络</h3>
@@ -190,7 +193,6 @@
         let currentBannerIndex = 0;
         let bannerTimer = null;
 
-        // 极其逼真、手艺人级别精准审计过的兜底数据集
         const defaultMockData = {
             settings: {
                 core_values: "坚持纯正的创意灵魂，做有商业实效的设计。克制、精准、深度落地，让每一个物理场景都成为品牌的自媒体。",
@@ -201,104 +203,42 @@
                 phone: "138-XXXX-XXXX", wechat: "ZHIHUI_CULTURE", email: "2664739667@qq.com"
             },
             banners: [
-                { 
-                    id: "b1", 
-                    title: "重塑城市物理边界：空间场景全案与标识导示深化交付", 
-                    image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2000&q=80"
-                },
-                { 
-                    id: "b2", 
-                    title: "从超级符号到货架优势：用顶尖品牌视觉资产驱动实效商业增长", 
-                    image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=2000&q=80" 
-                },
-                { 
-                    id: "b3", 
-                    title: "先锋数字舞美与沉浸公关会展：让线下交付转化为千万级自媒体声量", 
-                    image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=2000&q=80" 
-                }
+                { id: "b1", title: "重塑城市物理边界：空间场景全案与标识导示深化交付", image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2000&q=80" },
+                { id: "b2", title: "从超级符号到货架优势：用顶尖品牌视觉资产驱动实效商业增长", image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=2000&q=80" },
+                { id: "b3", title: "先锋数字舞美与沉浸公关会展：让线下交付转化为千万级自媒体声量", image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=2000&q=80" }
             ],
             cases: [
-                // 空间场景模块
-                { 
-                    id: "101", title: "华润综合体高端标识与动态导示系统设计全案", category: "spatial", tag: "空间场景 / 标识导示", 
-                    desc: "针对高端客群商业购物动线进行精准视觉规划。选用现代冷感建筑灰与精密发光字系统，打通线下空间的美学流动性。", 
-                    images: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80", 
-                    featured: true 
-                },
-                { 
-                    id: "102", title: "创意园特种微缝不锈钢装置与艺术美陈落地", category: "spatial", tag: "空间场景 / 景观美陈", 
-                    desc: "基于参数化建模的先锋金属景观装置。通过优质外部供应链的数控激光切割与手工无缝抛光工艺，实现极简几何艺术深度落地。", 
-                    images: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80", 
-                    featured: false 
-                },
-                { 
-                    id: "103", title: "独立咖啡品牌极简主义微水泥旗舰店硬装深化", category: "spatial", tag: "空间场景 / 店铺装修", 
-                    desc: "320平米概念化艺术咖啡体验空间。创意总监全程站场，精准严控现代冷色调质感墙面与定制不锈钢一体化吧台的收口细节。", 
-                    images: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=1200&q=80", 
-                    featured: false 
-                },
-                { 
-                    id: "104", title: "高空隐藏式奢华威士忌酒吧全案软装陈设", category: "spatial", tag: "空间场景 / 空间软装", 
-                    desc: "为特定商务精英群体打造的暗调社交场所。严选原装进口中古头层牛皮座椅与高级定制琥珀色中古灯具，完美贴合高客单价调性。", 
-                    images: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1200&q=80", 
-                    featured: false 
-                },
-
-                // 品牌视觉模块
-                { 
-                    id: "201", title: "有氧草本茶饮全套视觉符号与包装识别系统", category: "branding", tag: "品牌视觉 / 包装设计", 
-                    desc: "打破传统茶包沉闷感。采用极简肌理特种纸与艺术感活字排版，建立涵盖特种磨砂瓶、植物冷萃罐、门店视觉在内的视觉资产。", 
-                    images: "https://images.unsplash.com/photo-1594631252845-29fc4cc8cde9?auto=format&fit=crop&w=1200&q=80,https://images.unsplash.com/photo-1563227812-0ea4c22e6cc8?auto=format&fit=crop&w=1200&q=80", 
-                    featured: true 
-                },
-                { 
-                    id: "202", title: "先锋独立摄影集限量特种纸装帧与画册设计", category: "branding", tag: "品牌视觉 / 特种印刷", 
-                    desc: "收藏级艺术画册装帧。选用高克重纯手工棉纸，采用全裸脊锁线工艺、封面大面积无色击凸与特殊漆面复合，展现极致触觉。", 
-                    images: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=1200&q=80", 
-                    featured: false 
-                },
-                { 
-                    id: "203", title: "智能声学硬件系列产品营销概念与工业美学包装", category: "branding", tag: "品牌视觉 / 包装设计", 
-                    desc: "针对数码发烧友的极致开箱仪式感打造。采用环保甘蔗浆环保可降解开模内衬，外盒采用纯黑亚光特种纸工艺。", 
-                    images: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1200&q=80", 
-                    featured: false 
-                },
-                { 
-                    id: "204", title: "海外独立设计师买手店LOGO与几何视觉标识矩阵", category: "branding", tag: "品牌视觉 / 标志设计", 
-                    desc: "基于极致无衬线字体的现代超级符号。通过高度理性的比例重构，为其主线及副线提供全套服装吊牌、织唛系统规范。", 
-                    images: "https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&w=1200&q=80", 
-                    featured: false 
-                },
-
-                // 活动视觉模块
-                { 
-                    id: "301", title: "户外音乐节‘数字 Oasis’现场全案跨媒介视觉系统", category: "events", tag: "活动视觉 / 现场全案", 
-                    desc: "为主舞台、电子分舞台及互动创意市集区输出视觉流。确保超大户外场景下的色彩纯正度与安全导示的高清识别度。", 
-                    images: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=1200&q=80,https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=1200&q=80", 
-                    featured: true 
-                },
-                { 
-                    id: "302", title: "年度科技新品发布会三维巨幕舞台舞美空间设计", category: "events", tag: "活动视觉 / 舞美空间", 
-                    desc: "全景超长环绕大屏3D视觉排版编排。利用舞台几何构造与大面积冰屏结合，打造极具未来感的声光电一体化叙事空间。", 
-                    images: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1200&q=80", 
-                    featured: false 
-                },
-                { 
-                    id: "303", title: "潮流生活方式文化节核心传播物料与衍生品视觉", category: "events", tag: "活动视觉 / 海报物料", 
-                    desc: "融合高饱和度潮流发光元素。提供全场导视路牌旗帜、创意入场手环及定制联名编织袋包装设计，极具线上社群传播属性。", 
-                    images: "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&w=1200&q=80", 
-                    featured: false 
-                },
-                { 
-                    id: "304", title: "豪华纯电跑车私密新品品鉴会美术馆级公关会展视觉", category: "events", tag: "活动视觉 / 会展视觉", 
-                    desc: "尊享看车空间全案。使用极致对称的极简黑色背景板，配合雕塑级的专业定向线光源，让车辆本身成为唯一的物理艺术品。", 
-                    images: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1200&q=80", 
-                    featured: false 
-                }
+                { id: "101", title: "华润综合体高端标识与动态导示系统设计全案", category: "spatial", tag: "空间场景 / 标识导示", desc: "针对高端客群商业购物动线进行精准视觉规划。选用现代冷感建筑灰与精密发光字系统，打通线下空间的美学流动性。", images: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80", featured: true },
+                { id: "102", title: "创意园特种微缝不锈钢装置与艺术美陈落地", category: "spatial", tag: "空间场景 / 景观美陈", desc: "基于参数化建模的先锋金属景观装置。通过优质外部供应链的数控激光切割与手工无缝抛光工艺，实现极简几何艺术深度落地。", images: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80", featured: false },
+                { id: "103", title: "独立咖啡品牌极简主义微水泥旗舰店硬装深化", category: "spatial", tag: "空间场景 / 店铺装修", desc: "320平米概念化艺术咖啡体验空间。创意总监全程站场，精准严控现代冷色调质感墙面与定制不锈钢一体化吧台的收口细节。", images: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=1200&q=80", featured: false },
+                { id: "104", title: "高空隐藏式奢华威士忌酒吧全案软装陈设", category: "spatial", tag: "空间场景 / 空间软装", desc: "为特定商务精英群体打造的暗调社交场所。严选原装进口中古头层牛皮座椅与高级定制琥珀色中古灯具，完美贴合高客单价调性。", images: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1200&q=80", featured: false },
+                { id: "201", title: "有氧草本茶饮全套视觉符号与包装识别系统", category: "branding", tag: "品牌视觉 / 包装设计", desc: "打破传统茶包沉闷感。采用极简肌理特种纸与艺术感活字排版，建立涵盖特种磨砂瓶、植物冷萃罐、门店视觉在内的视觉资产。", images: "https://images.unsplash.com/photo-1594631252845-29fc4cc8cde9?auto=format&fit=crop&w=1200&q=80,https://images.unsplash.com/photo-1563227812-0ea4c22e6cc8?auto=format&fit=crop&w=1200&q=80", featured: true },
+                { id: "202", title: "先锋独立摄影集限量特种纸装帧与画册设计", category: "branding", tag: "品牌视觉 / 特种印刷", desc: "收藏级艺术画册装帧。选用高克重纯手工棉纸，采用全裸脊锁线工艺、封面大面积无色击凸与特殊漆面复合，展现极致触觉。", images: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=1200&q=80", featured: false },
+                { id: "203", title: "智能声学硬件系列产品营销概念与工业美学包装", category: "branding", tag: "品牌视觉 / 包装设计", desc: "针对数码发烧友的极致开箱仪式感打造。采用环保甘蔗浆环保可降解开模内衬，外盒采用纯黑亚光特种纸工艺。", images: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1200&q=80", featured: false },
+                { id: "204", title: "海外独立设计师买手店LOGO与几何视觉标识矩阵", category: "branding", tag: "品牌视觉 / 标志设计", desc: "基于极致无衬线字体的现代超级符号。通过高度理性的比例重构，为其主线及副线提供全套服装吊牌、织唛系统规范。", images: "https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&w=1200&q=80", featured: false },
+                { id: "301", title: "户外音乐节‘数字 Oasis’现场全案跨媒介视觉系统", category: "events", tag: "活动视觉 / 现场全案", desc: "为主舞台、电子分舞台及互动创意市集区输出视觉流。确保超大户外场景下的色彩纯正度与安全导示的高清识别度。", images: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=1200&q=80,https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=1200&q=80", featured: true },
+                { id: "302", title: "年度科技新品发布会三维巨幕舞台舞美空间设计", category: "events", tag: "活动视觉 / 舞美空间", desc: "全景超长环绕大屏3D视觉排版编排。利用舞台几何构造与大面积冰屏结合，打造极具未来感的声光电一体化叙事空间。", images: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1200&q=80", featured: false },
+                { id: "303", title: "潮流生活方式文化节核心传播物料与衍生品视觉", category: "events", tag: "活动视觉 / 海报物料", desc: "融合高饱和度潮流发光元素。提供全场导视路牌旗帜、创意入场手环及定制联名编织袋包装设计，极具线上社群传播属性。", images: "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&w=1200&q=80", featured: false },
+                { id: "304", title: "豪华纯电跑车私密新品品鉴会美术馆级公关会展视觉", category: "events", tag: "活动视觉 / 会展视觉", desc: "尊享看车空间全案。使用极致对称的极简黑色背景板，配合雕塑级的专业定向线光源，让车辆本身成为唯一的物理艺术品。", images: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1200&q=80", featured: false }
             ]
         };
 
-        // 核心技术：轮播横幅生成器
+        // 核心技术：移动端导航抽屉开关
+        function toggleMobileMenu() {
+            const dropdown = document.getElementById('mobile-dropdown');
+            if (dropdown.classList.contains('hidden')) {
+                dropdown.classList.remove('hidden');
+            } else {
+                dropdown.classList.add('hidden');
+            }
+        }
+
+        // 移动端点击具体页面后的动作（切换并闭合菜单）
+        function handleMobileNav(pageId) {
+            switchPage(pageId);
+            toggleMobileMenu();
+        }
+
         function setupBannerCarousel(banners) {
             const track = document.getElementById('banner-track');
             const dotsContainer = document.getElementById('banner-dots');
@@ -318,10 +258,7 @@
                             </div>
                         </div>
                     </div>`;
-
-                dotsContainer.innerHTML += `
-                    <button onclick="switchBannerTo(${idx})" class="w-2.5 h-2.5 rounded-full border border-white/40 bg-white/20 transition-all duration-500 focus:outline-none" id="banner-dot-${idx}"></button>
-                `;
+                dotsContainer.innerHTML += `<button onclick="switchBannerTo(${idx})" class="w-2.5 h-2.5 rounded-full border border-white/40 bg-white/20 transition-all duration-500 focus:outline-none" id="banner-dot-${idx}"></button>`;
             });
 
             currentBannerIndex = 0;
@@ -333,10 +270,8 @@
             const dotsContainer = document.getElementById('banner-dots');
             if(!dotsContainer) return;
             const total = dotsContainer.children.length;
-            
             if(index >= total) index = 0;
             if(index < 0) index = total - 1;
-
             currentBannerIndex = index;
             updateBannerVisualState();
             startBannerAutoPlay(total);
@@ -346,9 +281,7 @@
             const track = document.getElementById('banner-track');
             const dotsContainer = document.getElementById('banner-dots');
             if(!track || !dotsContainer) return;
-
             track.style.transform = `translateX(-${currentBannerIndex * 100}%)`;
-
             const dots = dotsContainer.children;
             for(let i = 0; i < dots.length; i++) {
                 if(i === currentBannerIndex) {
@@ -364,7 +297,6 @@
         function startBannerAutoPlay(total) {
             if(bannerTimer) clearInterval(bannerTimer);
             if(total <= 1) return;
-            
             bannerTimer = setInterval(() => {
                 let nextIndex = currentBannerIndex + 1;
                 if(nextIndex >= total) nextIndex = 0;
@@ -375,25 +307,18 @@
 
         function renderAllContent(data) {
             allGlobalData = data;
-            
-            // 渲染基础文案配置
             document.getElementById('text-core-values').innerText = (data.settings && data.settings.core_values) ? data.settings.core_values : defaultMockData.settings.core_values;
             document.getElementById('text-home-about').innerHTML = (data.settings && data.settings.home_about) ? data.settings.home_about : defaultMockData.settings.home_about;
             document.getElementById('text-cocreate-desc').innerText = (data.settings && data.settings.cocreate_desc) ? data.settings.cocreate_desc : defaultMockData.settings.cocreate_desc;
-            
-            // 增量精准渲染“关于知汇”核心标题与段落细节
             document.getElementById('text-about-heading').innerHTML = (data.settings && data.settings.about_heading) ? data.settings.about_heading : defaultMockData.settings.about_heading;
             document.getElementById('text-about-detail').innerHTML = (data.settings && data.settings.about_detail) ? data.settings.about_detail : defaultMockData.settings.about_detail;
-            
             document.getElementById('text-phone').innerText = (data.settings && data.settings.phone) ? data.settings.phone : defaultMockData.settings.phone;
             document.getElementById('text-wechat').innerText = (data.settings && data.settings.wechat) ? data.settings.wechat : defaultMockData.settings.wechat;
             document.getElementById('text-email').innerText = (data.settings && data.settings.email) ? data.settings.email : defaultMockData.settings.email;
 
-            // 驱动轮播图渲染
             const activeBanners = (data.banners && data.banners.length) ? data.banners : defaultMockData.banners;
             setupBannerCarousel(activeBanners);
 
-            // 清零并二次增量渲染案例列表
             const grids = {
                 featured: document.getElementById('featured-grid'),
                 spatial: document.getElementById('spatial-grid'),
@@ -425,7 +350,6 @@
         function openCaseDetail(id) {
             const currentSection = document.querySelector('.page-section.active');
             if(currentSection && currentSection.id !== 'case-detail') previousPageId = currentSection.id; 
-            
             const targetCase = allGlobalData.cases.find(c => c.id == id) || defaultMockData.cases.find(c => c.id == id);
             if (!targetCase) return;
 
@@ -434,7 +358,6 @@
             document.getElementById('detail-desc').innerText = targetCase.desc;
             const flowCon = document.getElementById('detail-images-flow');
             flowCon.innerHTML = '';
-            
             targetCase.images.split(',').forEach(imgUrl => {
                 if(imgUrl.trim()) flowCon.innerHTML += `<div class="w-full bg-neutral-100 mb-4"><img src="${imgUrl.trim()}" class="w-full object-contain"></div>`;
             });
@@ -446,34 +369,42 @@
             document.getElementById(pageId).classList.add('active');
             
             const nav = document.getElementById('main-nav');
+            const mobileDrop = document.getElementById('mobile-dropdown');
+            const mobileBtn = document.getElementById('mobile-menu-btn');
+
             if (pageId === 'cocreate') {
                 document.body.style.backgroundColor = '#1C1C1C';
                 nav.style.backgroundColor = 'rgba(28, 28, 28, 0.9)';
                 nav.classList.remove('text-black'); nav.classList.add('text-white');
+                if(mobileBtn) { mobileBtn.classList.remove('border-black/10'); mobileBtn.classList.add('border-white/10'); }
                 document.querySelectorAll('.nav-link').forEach(l => { l.classList.remove('text-black'); l.classList.add('text-white'); });
+                if(mobileDrop) {
+                    mobileDrop.style.backgroundColor = '#1C1C1C';
+                    document.querySelectorAll('.mobile-nav-link').forEach(l => { l.classList.remove('text-black', 'border-black/5'); l.classList.add('text-white', 'border-white/5'); });
+                }
             } else {
                 document.body.style.backgroundColor = '#F4F4F4';
                 nav.style.backgroundColor = 'rgba(244, 244, 244, 0.9)';
                 nav.classList.remove('text-white'); nav.classList.add('text-black');
+                if(mobileBtn) { mobileBtn.classList.remove('border-white/10'); mobileBtn.classList.add('border-black/10'); }
                 document.querySelectorAll('.nav-link').forEach(l => { l.classList.remove('text-white'); l.classList.add('text-black'); });
+                if(mobileDrop) {
+                    mobileDrop.style.backgroundColor = '#F4F4F4';
+                    document.querySelectorAll('.mobile-nav-link').forEach(l => { l.classList.remove('text-white', 'border-white/5'); l.classList.add('text-black', 'border-black/5'); });
+                }
             }
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         async function init() {
             renderAllContent(defaultMockData);
-            
             try {
                 const res = await fetch('/api/data');
                 if (res.ok) {
                     const data = await res.json();
-                    if(data && (data.settings || data.cases)) {
-                        renderAllContent(data);
-                    }
+                    if(data && (data.settings || data.cases)) { renderAllContent(data); }
                 }
-            } catch (e) { 
-                console.log("独立客户端运行平稳，动态内容全量隔离。");
-            }
+            } catch (e) { console.log("独立静态端平稳运行。"); }
         }
         window.onload = init;
     </script>
