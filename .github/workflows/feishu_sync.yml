@@ -5,6 +5,10 @@ on:
     - cron: '0 * * * *'
   workflow_dispatch:
 
+# 💡 核心升级：告诉 GitHub 提前强制开启 Node 24 新版引擎，消灭警告
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
 permissions:
   contents: write
   pages: write
@@ -30,10 +34,10 @@ jobs:
 
       - name: Commit and Push
         run: |
-          git config --global user.name "Feishu Sync Bot"
-          git config --global user.email "bot@github.com"
+          git config --global user.name \"Feishu Sync Bot\"
+          git config --global user.email \"bot@github.com\"
           git add api/data.json
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Update data" && git push)
+          git diff --quiet && git diff --staged --quiet || (git commit -m \"Update data\" && git push)
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
