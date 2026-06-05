@@ -7,6 +7,8 @@ on:
 
 permissions:
   contents: write
+  pages: write      # 【核心新增权限：允许脚本直接发布网页】
+  id-token: write   # 【核心新增权限：允许脚本直接发布网页】
 
 jobs:
   sync-data:
@@ -55,7 +57,6 @@ jobs:
                       break
               return [x.get("fields", {}) for x in records]
 
-          # 【超级防崩溃核心：强行将飞书任何古怪数据降维转换成纯文本字符串】
           def parse_text(val):
               if not val: return ""
               if isinstance(val, list):
@@ -132,8 +133,25 @@ jobs:
         shell: python
 
       - name: Commit and Push Changes
+        id: commit_step
         run: |
           git config --global user.name "Feishu Sync Bot"
           git config --global user.email "bot@github.com"
           git add api/data.json
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Automated Feishu data refresh" && git push)
+          # 如果没有变化就静默退出，如果有变化就提交并标记
+          if git diff --quiet && git diff --staged --quiet; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            git commit -m "Automated Feishu data refresh"
+            git push
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+      # 【终极强制扣动扳机：只要数据变了，原地直接生成并发布网页，不需要等门卫睡醒】
+      - name: Upload Pages Artifact
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v2
