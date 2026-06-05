@@ -76,14 +76,15 @@ jobs:
           
           final_data = {"settings": {}, "banners": [], "cases": []}
           
+          # 【核心修复：对齐厂长的“键名”与“内容值”】
           for item in raw_settings:
-              k = item.get("配置项")
-              v = item.get("具体内容")
+              k = item.get("键名")
+              v = item.get("内容值")
               if k: final_data["settings"][k] = v
               
           for item in raw_cocreate:
-              k = item.get("配置项")
-              v = item.get("具体内容")
+              k = item.get("键名")
+              v = item.get("内容值")
               if k: final_data["settings"][k] = v
               
           for b in raw_banners:
@@ -114,5 +115,4 @@ jobs:
           git config --global user.name "Feishu Sync Bot"
           git config --global user.email "bot@github.com"
           git add api/data.json
-          # 如果文件有变化就提交并强行推送，以此触发 GitHub Pages 原生的构建
           git diff --quiet && git diff --staged --quiet || (git commit -m "Automated Feishu data refresh" && git push)
