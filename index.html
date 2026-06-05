@@ -89,8 +89,8 @@
                 <div id="events-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
             </section>
 
-            <!-- 核心优化：将这里的 py-24 改为了 pt-4 md:pt-6 pb-24，让“知汇共创”页面的标题完美上移 -->
-            <section id="cocreate" class="page-section -mx-6 md:-mx-12 -mt-12 px-6 md:px-12 pt-4 md:pt-6 pb-24 bg-[#1C1C1C] text-white space-y-16">
+            <!-- 优化：选项 B - 适度优雅微调（-mt-12 pt-12 md:pt-16） -->
+            <section id="cocreate" class="page-section -mx-6 md:-mx-12 -mt-12 px-6 md:px-12 pt-12 md:pt-16 pb-24 bg-[#1C1C1C] text-white space-y-16">
                 <div class="max-w-4xl">
                     <span class="text-[#00FF66] font-mono tracking-widest text-sm uppercase block mb-2">// ZHIHUI CO-CREATION LAB</span>
                     <h1 class="font-heading text-4xl md:text-6xl mb-6 leading-tight">打破传统甲乙方，<br>成为彼此的商业合伙人。</h1>
@@ -235,7 +235,6 @@
                 track.innerHTML += `
                     <div class="w-full h-full flex-shrink-0 relative">
                         <img src="${b.image}" class="w-full h-full object-cover">
-                        <!-- 核心优化：将 items-start 改为 items-end，将 pt-16 改为 pb-8 md:pb-12，实现文字精准靠左下方对齐 -->
                         <div class="absolute inset-0 bg-black/40 flex items-end pb-8 px-6 md:pb-12 md:px-12">
                             <div class="text-white max-w-4xl mb-2 md:mb-4">
                                 <span class="font-mono text-[10px] tracking-widest uppercase bg-black/60 px-2 py-1 mb-2 inline-block">// FOCUS / 深度操盘推介</span>
