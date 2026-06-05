@@ -24,7 +24,7 @@
             "category": "",
             "tag": "",
             "desc": "",
-            "images": "",
+            "images": [],
             "featured": false
         },
         {
@@ -33,7 +33,7 @@
             "category": "",
             "tag": "",
             "desc": "",
-            "images": "",
+            "images": [],
             "featured": false
         },
         {
@@ -42,7 +42,7 @@
             "category": "",
             "tag": "",
             "desc": "",
-            "images": "",
+            "images": [],
             "featured": false
         },
         {
@@ -51,7 +51,7 @@
             "category": "",
             "tag": "",
             "desc": "",
-            "images": "",
+            "images": [],
             "featured": false
         },
         {
@@ -60,7 +60,7 @@
             "category": "",
             "tag": "",
             "desc": "",
-            "images": "",
+            "images": [],
             "featured": false
         }
     ]
