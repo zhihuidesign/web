@@ -217,7 +217,7 @@
 
         function handleMobileNav(pageId) { switchPage(pageId); toggleMobileMenu(); }
 
-        function setupBannerCarousel(banners) {
+function setupBannerCarousel(banners) {
             const track = document.getElementById('banner-track');
             const dotsContainer = document.getElementById('banner-dots');
             if(!track || !dotsContainer) return;
@@ -234,7 +234,7 @@
                 track.innerHTML += `
                     <div class="w-full h-full flex-shrink-0 relative">
                         <img src="${b.image}" class="w-full h-full object-cover">
-                        <div class="absolute inset-0 bg-black/30 flex items-end p-6 md:p-12">
+                        <div class="absolute inset-0 bg-black/30 flex items-start pt-16 px-6 md:pt-24 md:px-12">
                             <div class="text-white max-w-4xl">
                                 <span class="font-mono text-[10px] tracking-widest uppercase bg-black/60 px-2 py-1 mb-2 inline-block">// FOCUS / 深度操盘推介</span>
                                 <h2 class="font-heading text-lg md:text-2xl lg:text-3xl leading-tight">${b.title}</h2>
