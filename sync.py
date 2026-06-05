@@ -10,9 +10,9 @@ APP_TOKEN = "L3gAbHr0vaDklls2gfQcjdEmnjf"
 
 # ==================== 🛑 小白配置核心区 🛑 ====================
 # 💡 请看下方的【配置指南】，换成你飞书里每一张子表真正以 tbl 开头的 ID！
-SETTINGS_TABLE_ID = "换成你Settings表的tbl开头的ID" 
-BANNERS_TABLE_ID = "换成你Banners表的tbl开头的ID"
-CASES_TABLE_ID = "换成你Cases表的tbl开头的ID"
+SETTINGS_TABLE_ID = "tbl4yj6yMn9b6TVB" 
+BANNERS_TABLE_ID = "tbleKDTByw1PG3vB"
+CASES_TABLE_ID = "tblLbJOrvKnT2dHR"
 # =============================================================
 
 def parse_text_field(field_val):
