@@ -3,12 +3,10 @@ name: Feishu Table Automation Sync
 on:
   schedule:
     - cron: '0 * * * *' # 每小时自动执行一次
-  workflow_dispatch: # 允许你随时在 GitHub 页面上点按钮手动执行
+  workflow_dispatch: # 允许随时手动执行
 
 permissions:
   contents: write
-  pages: write
-  id-token: write
 
 jobs:
   sync-data:
@@ -116,9 +114,5 @@ jobs:
           git config --global user.name "Feishu Sync Bot"
           git config --global user.email "bot@github.com"
           git add api/data.json
+          # 如果文件有变化就提交并强行推送，以此触发 GitHub Pages 原生的构建
           git diff --quiet && git diff --staged --quiet || (git commit -m "Automated Feishu data refresh" && git push)
-
-      # 🌟 新增核心工序：强行通知并唤醒 GitHub 网页发布程序
-      - name: Trigger GitHub Pages Deployment
-        uses: actions/deploy-pages@v2
-        if: always()
