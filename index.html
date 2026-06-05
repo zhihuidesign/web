@@ -43,7 +43,7 @@
     <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(window.hasSubmitted) { alert('您的共创申请已通过飞书网络送达创始人手机！'); document.getElementById('coform').reset(); window.hasSubmitted=false; }"></iframe>
 
     <div class="pt-24 min-h-screen flex flex-col justify-between">
-        <main class="px-6 md:px-12 py-12 space-y-16">
+        <main class="px-6 md:px-12 pt-2 pb-12 space-y-16">
             
             <section id="home" class="page-section active space-y-12">
                 <div class="w-full relative overflow-hidden bg-neutral-300 aspect-[21/9] md:aspect-[3/1] border border-black/5 my-4 group" id="banner-slider-wrapper">
@@ -182,9 +182,10 @@
         let currentBannerIndex = 0;
         let bannerTimer = null;
 
+        // 优化点：将原来的 <br> 替换为 <br><br>，确保飞书段落之间能空出一整行
         function formatText(text) {
             if (!text) return "";
-            return String(text).replace(/\n/g, '<br>');
+            return String(text).replace(/\n/g, '<br><br>');
         }
 
         const defaultMockData = {
@@ -196,25 +197,8 @@
                 about_detail: "<p>我们彻底打破了传统品牌设计公司臃肿低效机制。在知汇文化，没有初级实习生套模板接盘。</p><p>作为商业场景的“全栈架构师”，知汇文化提供强有力的纯正创意灵魂。</p><p>而重资产执行环节，则由我们严选并合作多年的顶级外部供应链无缝承接。</p>",
                 PHONE: "+86 186-6497-9841", WECHAT: "joyhanDD", EMAIL: "2664739667@qq.com"
             },
-            banners: [
-                { id: "b1", title: "重塑城市物理边界：空间场景全案与标识导示深化交付", image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2000&q=80" },
-                { id: "b2", title: "从超级符号到货架优势：用顶尖品牌视觉资产驱动实效商业增长", image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=2000&q=80" },
-                { id: "b3", title: "先锋数字舞美与沉浸公关会展：让线下交付转化为千万级自媒体声量", image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=2000&q=80" }
-            ],
-            cases: [
-                { id: "101", title: "华润综合体高端标识与动态导示系统设计全案", category: "spatial", tag: "空间场景 / 标识导示", desc: "针对高端客群商业购物动线进行精准视觉规划。\n选用现代冷感建筑灰与精密发光字系统，打通线下空间的美学流动性。", images: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80", featured: true },
-                { id: "102", title: "创意园特种微缝不锈钢装置与艺术美陈落地", category: "spatial", tag: "空间场景 / 景观美陈", desc: "基于参数化建模的先锋金属景观装置。\n通过优质外部供应链的数控激光切割与手工无缝抛光工艺，实现极简几何艺术深度落地。", images: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80", featured: false },
-                { id: "103", title: "独立咖啡品牌极简主义微水泥旗舰店硬装深化", category: "spatial", tag: "空间场景 / 店铺装修", desc: "320平米概念化艺术咖啡体验空间。\n创意总监全程站场，精准严控现代冷色调质感墙面与定制不锈钢一体化吧台的收口细节。", images: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=1200&q=80", featured: false },
-                { id: "104", title: "高空隐藏式奢华威士忌酒吧全案软装陈设", category: "spatial", tag: "空间场景 / 空间软装", desc: "为特定商务精英群体打造的暗调社交场所。\n严选原装进口中古头层牛皮座椅与高级定制琥珀色中古灯具，完美贴合高客单价调性。", images: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1200&q=80", featured: false },
-                { id: "201", title: "有氧草本茶饮全套视觉符号与包装识别系统", category: "branding", tag: "品牌视觉 / 包装设计", desc: "打破传统茶包沉闷感。\n采用极简肌理特种纸与艺术感活字排版，建立涵盖特种磨砂瓶、植物冷萃罐、门店视觉在内的视觉资产。", images: "https://images.unsplash.com/photo-1594631252845-29fc4cc8cde9?auto=format&fit=crop&w=1200&q=80,https://images.unsplash.com/photo-1563227812-0ea4c22e6cc8?auto=format&fit=crop&w=1200&q=80", featured: true },
-                { id: "202", title: "先锋独立摄影集限量特种纸装帧与画册设计", category: "branding", tag: "品牌视觉 / 特种印刷", desc: "收藏级艺术画册装帧。\n选用高克重纯手工棉纸，采用全裸脊锁线工艺、封面大面积无色击凸与特殊漆面复合，展现极致触觉。", images: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=1200&q=80", featured: false },
-                { id: "203", title: "智能声学硬件系列产品营销概念与工业美学包装", category: "branding", tag: "品牌视觉 / 包装设计", desc: "针对数码发烧友的极致开箱仪式感打造。\n采用环保甘蔗浆环保可降解开模内衬，外盒采用纯黑亚光特种纸工艺。", images: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1200&q=80", featured: false },
-                { id: "204", title: "海外独立设计师买手店LOGO与几何视觉标识矩阵", category: "branding", tag: "品牌视觉 / 标志设计", desc: "基于极致无衬线字体的现代超级符号。\n通过高度理性的比例重构，为其主线及副线提供全套服装吊牌、织唛系统规范。", images: "https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&w=1200&q=80", featured: false },
-                { id: "301", title: "户外音乐节‘数字 Oasis’现场全案跨媒介视觉系统", category: "events", tag: "活动视觉 / 现场全案", desc: "为主舞台、电子分舞台及互动创意市集区输出视觉流。\n确保超大户外场景下的色彩纯正度与安全导示的高清识别度。", images: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=1200&q=80,https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=1200&q=80", featured: true },
-                { id: "302", title: "年度科技新品发布会三维巨幕舞台舞美空间设计", category: "events", tag: "活动视觉 / 舞美空间", desc: "全景超长环绕大屏3D视觉排版编排。\n利用舞台几何构造与大面积冰屏结合，打造极具未来感的声光电一体化叙事空间。", images: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1200&q=80", featured: false },
-                { id: "303", title: "潮流生活方式文化节核心传播物料与衍生品视觉", category: "events", tag: "活动视觉 / 海报物料", desc: "融合高饱和度潮流发光元素。\n提供全场导视路牌旗帜、创意入场手环及定制联名编织袋包装设计，极极具线上社群传播属性。", images: "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&w=1200&q=80", featured: false },
-                { id: "304", title: "豪华纯电跑车私密新品品鉴会美术馆级公关会展视觉", category: "events", tag: "活动视觉 / 会展视觉", desc: "尊享看车空间全案。\n使用极致对称的极简黑色背景板，配合雕塑级的专业定向线光源，让车辆本身成为唯一的物理艺术品。", images: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1200&q=80", featured: false }
-            ]
+            banners: [],
+            cases: []
         };
 
         function toggleMobileMenu() {
@@ -230,6 +214,12 @@
             if(!track || !dotsContainer) return;
             track.innerHTML = '';
             dotsContainer.innerHTML = '';
+            if(!banners || banners.length === 0) {
+                document.getElementById('banner-slider-wrapper').style.display = 'none';
+                return;
+            } else {
+                document.getElementById('banner-slider-wrapper').style.display = 'block';
+            }
             banners.forEach((b, idx) => {
                 track.innerHTML += `
                     <div class="w-full h-full flex-shrink-0 relative">
@@ -290,18 +280,23 @@
         function renderAllContent(data) {
             allGlobalData = data;
             document.getElementById('text-core-values').innerHTML = formatText((data.settings && data.settings.core_values) ? data.settings.core_values : defaultMockData.settings.core_values);
-            document.getElementById('text-home-about').innerHTML = (data.settings && data.settings.home_about) ? data.settings.home_about : defaultMockData.settings.home_about;
-            document.getElementById('text-cocreate-desc').innerHTML = (data.settings && data.settings.cocreate_desc) ? data.settings.cocreate_desc : defaultMockData.settings.cocreate_desc;
-            document.getElementById('text-about-heading').innerHTML = (data.settings && data.settings.about_heading) ? data.settings.about_heading : defaultMockData.settings.about_heading;
-            document.getElementById('text-about-detail').innerHTML = (data.settings && data.settings.about_detail) ? data.settings.about_detail : defaultMockData.settings.about_detail;
-            document.getElementById('text-phone').innerHTML = (data.settings && data.settings.phone) ? data.settings.phone : defaultMockData.settings.phone;
-            document.getElementById('text-wechat').innerHTML = (data.settings && data.settings.wechat) ? data.settings.wechat : defaultMockData.settings.wechat;
-            document.getElementById('text-email').innerHTML = (data.settings && data.settings.email) ? data.settings.email : defaultMockData.settings.email;
-            const activeBanners = (data.banners && data.banners.length) ? data.banners : defaultMockData.banners;
+            document.getElementById('text-home-about').innerHTML = formatText((data.settings && data.settings.home_about) ? data.settings.home_about : defaultMockData.settings.home_about);
+            document.getElementById('text-cocreate-desc').innerHTML = formatText((data.settings && data.settings.cocreate_desc) ? data.settings.cocreate_desc : defaultMockData.settings.cocreate_desc);
+            document.getElementById('text-about-heading').innerHTML = formatText((data.settings && data.settings.about_heading) ? data.settings.about_heading : defaultMockData.settings.about_heading);
+            document.getElementById('text-about-detail').innerHTML = formatText((data.settings && data.settings.about_detail) ? data.settings.about_detail : defaultMockData.settings.about_detail);
+            
+            // 绑定商务联络数据
+            document.getElementById('text-phone').innerHTML = (data.settings && data.settings.phone) ? data.settings.phone : (data.settings && data.settings.PHONE ? data.settings.PHONE : "--");
+            document.getElementById('text-wechat').innerHTML = (data.settings && data.settings.wechat) ? data.settings.wechat : (data.settings && data.settings.WECHAT ? data.settings.WECHAT : "--");
+            document.getElementById('text-email').innerHTML = (data.settings && data.settings.email) ? data.settings.email : (data.settings && data.settings.EMAIL ? data.settings.EMAIL : "--");
+            
+            const activeBanners = (data.banners && data.banners.length) ? data.banners : [];
             setupBannerCarousel(activeBanners);
+            
             const grids = { featured: document.getElementById('featured-grid'), spatial: document.getElementById('spatial-grid'), branding: document.getElementById('branding-grid'), events: document.getElementById('events-grid') };
             Object.values(grids).forEach(g => { if(g) g.innerHTML = ''; });
-            const activeCases = (data.cases && data.cases.length) ? data.cases : defaultMockData.cases;
+            
+            const activeCases = (data.cases && data.cases.length) ? data.cases : [];
             activeCases.forEach(c => {
                 const imgArray = c.images.split(',');
                 const thumbnail = imgArray[0].trim();
@@ -324,7 +319,7 @@
         function openCaseDetail(id) {
             const currentSection = document.querySelector('.page-section.active');
             if(currentSection && currentSection.id !== 'case-detail') previousPageId = currentSection.id; 
-            const targetCase = allGlobalData.cases.find(c => c.id == id) || defaultMockData.cases.find(c => c.id == id);
+            const targetCase = allGlobalData.cases.find(c => c.id == id);
             if (!targetCase) return;
             document.getElementById('detail-title').innerText = targetCase.title;
             document.getElementById('detail-tag').innerText = targetCase.tag;
@@ -368,14 +363,17 @@
         }
 
         async function init() {
-            renderAllContent(defaultMockData);
             try {
                 const res = await fetch('./api/data.json');
                 if (res.ok) {
                     const data = await res.json();
-                    if(data && (data.settings || data.cases)) { renderAllContent(data); }
+                    if(data && (data.settings || data.cases)) { 
+                        renderAllContent(data); 
+                        return;
+                    }
                 }
-            } catch (e) { console.log("本地数据平稳流转。"); }
+            } catch (e) { console.log("等待数据流接入。"); }
+            renderAllContent(defaultMockData);
         }
         window.onload = init;
     </script>
