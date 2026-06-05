@@ -5,18 +5,29 @@ on:
     - cron: '0 * * * *'
   workflow_dispatch:
 
+# 核心修改：注入网页部署所必需的最高安全通行证
 permissions:
   contents: write
+  pages: write
+  id-token: write
+
+# 确保多次触发时，前一次没跑完的会自动排队，不冲突
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
   sync-data:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.10'
 
@@ -30,15 +41,25 @@ jobs:
         run: |
           import os, json, requests
           
+          os.makedirs("api", exist_ok=True)
+          if not os.path.exists("api/data.json"):
+              with open("api/data.json", "w", encoding="utf-8") as f:
+                  json.dump({"settings": {}, "banners": [], "cases": []}, f)
+          
           APP_ID = os.environ.get("FEISHU_APP_ID")
           APP_SECRET = os.environ.get("FEISHU_APP_SECRET")
           BASE_ID = "L3gAbHr0vaDklls2gfQcjdEmnjf"
           
-          res = requests.post("https://open.feishu.cn/open-apis/auth/v3/tenant_access_token/internal", json={"app_id": APP_ID, "app_secret": APP_SECRET})
-          token = res.json().get("tenant_access_token")
-          headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json; charset=utf-8"}
+          try:
+              res = requests.post("https://open.feishu.cn/open-apis/auth/v3/tenant_access_token/internal", json={"app_id": APP_ID, "app_secret": APP_SECRET})
+              token = res.json().get("tenant_access_token")
+              headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json; charset=utf-8"}
+          except Exception as e:
+              print(f"Auth error: {e}")
+              token = None
           
           def get_records(table_id):
+              if not token: return []
               records = []
               url = f"https://open.feishu.cn/open-apis/bitable/v1/apps/{BASE_ID}/tables/{table_id}/records?page_size=100"
               while url:
@@ -97,10 +118,15 @@ jobs:
           
           final_data = {"settings": {}, "banners": [], "cases": []}
           
+          # 核心修正：同时兼容小写 phone、大写带有下划线的 FOUNDER_PHONE 
           for item in raw_settings:
               k = parse_text(item.get("键名"))
               v = parse_text(item.get("内容值"))
-              if k: final_data["settings"][k] = v
+              if k: 
+                  final_data["settings"][k] = v
+                  # 如果飞书填的是 phone，自动帮前端多生成一份 FOUNDER_PHONE，双保险防空！
+                  if k == "phone": final_data["settings"]["FOUNDER_PHONE"] = v
+                  if k == "wechat": final_data["settings"]["FOUNDER_WECHAT"] = v
               
           for item in raw_cocreate:
               k = parse_text(item.get("键名"))
@@ -125,18 +151,27 @@ jobs:
                   "featured": bool(c.get("精选推荐", False))
               })
               
-          os.makedirs("api", exist_ok=True)
-          with open("api/data.json", "w", encoding="utf-8") as f:
-              json.dump(final_data, f, ensure_ascii=False, indent=4)
+          if final_data["settings"] or final_data["banners"] or final_data["cases"]:
+              with open("api/data.json", "w", encoding="utf-8") as f:
+                  json.dump(final_data, f, ensure_ascii=False, indent=4)
         shell: python
 
-      - name: Commit and Push Changes
+      - name: Commit Changes
         run: |
           git config --global user.name "Feishu Sync Bot"
           git config --global user.email "bot@github.com"
           git add api/data.json
-          # 如果有数据变化才提交。关键点：只要提交就会唤醒老门卫发布网页！
-          if ! git diff --quiet && git diff --staged --quiet; then
-            git commit -m "Automated Feishu data refresh"
-            git push
-          fi
+          git diff --quiet && git diff --staged --quiet || git commit -m "Automated Feishu data refresh"
+
+      # 核心修改：让此脚本自身具备一键打包并秒级发布到网页的功能
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
