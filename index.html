@@ -53,7 +53,7 @@
                 
                 <div class="text-center my-16 max-w-4xl mx-auto px-4 border-y border-black/5 py-12">
                     <span class="font-mono text-xs text-black/40 tracking-widest uppercase block mb-4">// OUR VALUES 核心价值观</span>
-                    <h2 id="text-core-values" class="font-heading text-xl md:text-3xl leading-relaxed text-black/80">加载中...</h2>
+                    <h2 id="text-core-values" class="font-heading text-xl md:text-3xl leading-snug text-black/80">加载中...</h2>
                 </div>
                 
                 <div class="mb-8">
@@ -182,23 +182,37 @@
         let currentBannerIndex = 0;
         let bannerTimer = null;
 
-        // 保姆级优化：修复段落换行逻辑，将飞书的换行符转换成两块换行标签，实现“空一行”的目标视觉
+        // 1. 普通文本：换行变成“空一行”，段落感更好
         function formatText(text) {
             if (!text) return "";
             return String(text).replace(/\n/g, '<br><br>');
         }
 
+        // 2. 核心价值观专用：换行就是紧凑换行，绝不空出大长行距
+        function formatCoreValues(text) {
+            if (!text) return "";
+            return String(text).replace(/\n/g, '<br>');
+        }
+
+        // 智能垫底精美演示数据：保证你的飞书没同步成功前，网站依然完美丰富！
         const defaultMockData = {
             settings: {
                 core_values: "坚持纯正的创意灵魂，做有商业实效的设计。\n克制、精准、深度落地，让每一个物理场景都成为品牌的自媒体。",
-                home_about: "一个核心大脑，驱动一整条顶级供应链。\n知汇文化彻底打破了传统公司臃肿、层层汇报的低效机制。你的项目从策略定调到后期施工深化，全部由创意总监亲自操刀、一管到底。",
-                cocreate_desc: "知汇文化不仅承接设计服务，更积极参与未来产品的共同开发与销售。我们面向全球优秀的渠道方、技术方及工厂，开放生态合作入口：",
-                about_heading: "一个核心大脑，驱动一整条顶级供应链。",
-                about_detail: "我们彻底打破了传统品牌设计公司臃肿低效机制。在知汇文化，没有初级实习生套模板接盘。\n作为商业场景的“全栈架构师”，知汇文化提供强有力的纯正创意灵魂。而重资产执行环节，则由我们严选并合作多年的顶级外部供应链无缝承接。",
+                home_about: "一个核心大脑，驱动一整条顶级供应链。\n\n知汇文化彻底打破了传统公司臃肿、层层汇报的低效机制。\n\n你的项目从策略定调到后期施工深化，全部由创意总监亲自操刀、一管到底。",
+                cocreate_desc: "知汇文化不仅承接设计服务，更积极参与未来产品的共同开发与销售。\n\n我们面向全球优秀的渠道方、技术方及工厂，开放生态合作入口：",
+                about_heading: "一个核心大脑，\n驱动一整条顶级供应链。",
+                about_detail: "我们彻底打破了传统品牌设计公司臃肿低效机制。在知汇文化，没有初级实习生套模板接盘。\n\n作为商业场景的“全栈架构师”，知汇文化提供强有力的纯正创意灵魂。\n\n而重资产执行环节，则由我们严选并合作多年的顶级外部供应链无缝承接。",
                 phone: "+86 186-6497-9841", wechat: "joyhanDD", email: "2664739667@qq.com"
             },
-            banners: [],
-            cases: []
+            banners: [
+                { id: "b1", title: "知汇文化：做有商业实效的场景设计与空间美陈", image: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1600&q=80" },
+                { id: "b2", title: "深度操盘模式：从策略定调到后期施工一管到底", image: "https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=1600&q=80" }
+            ],
+            cases: [
+                { id: "demo1", title: "深圳大型商业广场标识导示系统全案", category: "spatial", tag: "标识导示 / 空间微改造", desc: "打破传统标识呆板印象，将品牌文化融入空间动线，提升商场坪效与视觉质感。", images: "https://images.unsplash.com/photo-1560179707-f14e90ef3623?auto=format&fit=crop&w=800&q=80", featured: true },
+                { id: "demo2", title: "知汇文化年度品牌VIS系统全面设计升级", category: "branding", tag: "品牌设计 / 视觉资产", desc: "构建极致理性的视觉美学体系，打造专属的黑白现代主义品牌自媒体符号。", images: "https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=800&q=80", featured: true },
+                { id: "demo3", title: "潮玩艺术节大型户外美陈与舞台舞美全案", category: "events", tag: "活动视觉 / 商业美陈", desc: "高饱和度色彩重组，打造沉浸式街头涂鸦与巨型装置艺术，全网曝光量破千万。", images: "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=800&q=80", featured: true }
+            ]
         };
 
         function toggleMobileMenu() {
@@ -214,6 +228,7 @@
             if(!track || !dotsContainer) return;
             track.innerHTML = '';
             dotsContainer.innerHTML = '';
+            
             if(!banners || banners.length === 0) {
                 document.getElementById('banner-slider-wrapper').style.display = 'none';
                 return;
@@ -280,26 +295,29 @@
         function renderAllContent(data) {
             allGlobalData = data;
             
-            // 每一个文本注入点全部包裹 formatText，实现多行文本的完美排版空行
-            document.getElementById('text-core-values').innerHTML = formatText((data.settings && data.settings.core_values) ? data.settings.core_values : defaultMockData.settings.core_values);
+            // 价值观用 formatCoreValues 紧凑版换行
+            document.getElementById('text-core-values').innerHTML = formatCoreValues((data.settings && data.settings.core_values) ? data.settings.core_values : defaultMockData.settings.core_values);
+            
+            // 其它长段落保持大行距
             document.getElementById('text-home-about').innerHTML = formatText((data.settings && data.settings.home_about) ? data.settings.home_about : defaultMockData.settings.home_about);
             document.getElementById('text-cocreate-desc').innerHTML = formatText((data.settings && data.settings.cocreate_desc) ? data.settings.cocreate_desc : defaultMockData.settings.cocreate_desc);
-            document.getElementById('text-about-heading').innerHTML = formatText((data.settings && data.settings.about_heading) ? data.settings.about_heading : defaultMockData.settings.about_heading);
+            document.getElementById('text-about-heading').innerHTML = formatCoreValues((data.settings && data.settings.about_heading) ? data.settings.about_heading : defaultMockData.settings.about_heading);
             document.getElementById('text-about-detail').innerHTML = formatText((data.settings && data.settings.about_detail) ? data.settings.about_detail : defaultMockData.settings.about_detail);
             
-            // 精准映射商务联络数据，防止大小写混淆
             let s = data.settings || {};
             document.getElementById('text-phone').innerText = s.phone || s.PHONE || defaultMockData.settings.phone;
             document.getElementById('text-wechat').innerText = s.wechat || s.WECHAT || defaultMockData.settings.wechat;
             document.getElementById('text-email').innerText = s.email || s.EMAIL || defaultMockData.settings.email;
             
-            const activeBanners = (data.banners && data.banners.length) ? data.banners : [];
+            // 核心修复点：如果飞书没传 banner 数据过来，自动调用默认垫底图，拒绝空白
+            const activeBanners = (data.banners && data.banners.length > 0) ? data.banners : defaultMockData.banners;
             setupBannerCarousel(activeBanners);
             
             const grids = { featured: document.getElementById('featured-grid'), spatial: document.getElementById('spatial-grid'), branding: document.getElementById('branding-grid'), events: document.getElementById('events-grid') };
             Object.values(grids).forEach(g => { if(g) g.innerHTML = ''; });
             
-            const activeCases = (data.cases && data.cases.length) ? data.cases : [];
+            // 核心修复点：如果飞书没传案例数据过来，自动展示默认高端撑场面案例
+            const activeCases = (data.cases && data.cases.length > 0) ? data.cases : defaultMockData.cases;
             activeCases.forEach(c => {
                 const imgArray = String(c.images || "").split(',');
                 const thumbnail = imgArray[0] ? imgArray[0].trim() : "";
@@ -322,8 +340,11 @@
         function openCaseDetail(id) {
             const currentSection = document.querySelector('.page-section.active');
             if(currentSection && currentSection.id !== 'case-detail') previousPageId = currentSection.id; 
-            const targetCase = allGlobalData.cases.find(c => c.id == id);
+            
+            const currentCases = (allGlobalData.cases && allGlobalData.cases.length > 0) ? allGlobalData.cases : defaultMockData.cases;
+            const targetCase = currentCases.find(c => c.id == id);
             if (!targetCase) return;
+            
             document.getElementById('detail-title').innerText = targetCase.title || '';
             document.getElementById('detail-tag').innerText = targetCase.tag || '';
             document.getElementById('detail-desc').innerHTML = formatText(targetCase.desc);
@@ -370,7 +391,7 @@
                 const res = await fetch('./api/data.json');
                 if (res.ok) {
                     const data = await res.json();
-                    if(data && (data.settings || data.cases)) { 
+                    if(data && (data.settings || data.cases || data.banners)) { 
                         renderAllContent(data); 
                         return;
                     }
