@@ -40,8 +40,6 @@
         </div>
     </nav>
 
-    <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(window.hasSubmitted) { alert('您的共创申请已通过飞书网络送达创始人手机！'); document.getElementById('coform').reset(); window.hasSubmitted=false; }"></iframe>
-
     <div class="pt-24 min-h-screen flex flex-col justify-between">
         <main class="px-6 md:px-12 pt-2 pb-12 space-y-16">
             
@@ -118,10 +116,10 @@
 
                 <div class="max-w-xl border-t border-white/10 pt-12">
                     <h3 class="text-lg font-bold mb-6">提交您的共创想法</h3>
-                    <form id="coform" method="POST" action="https://xcn3g3vxlg7p.feishu.cn/share/base/form/shrcnYlsYdZ95Xry5W8ndaLDxgb" target="hidden_iframe" onsubmit="window.hasSubmitted=true;" class="space-y-4">
-                        <input type="text" name="name" placeholder="您的姓名 / 称呼" required class="w-full bg-white/5 border border-white/10 px-4 py-3 text-sm text-white focus:outline-none focus:border-[#00FF66]">
-                        <input type="text" name="contact" placeholder="您的微信 / 电话" required class="w-full bg-white/5 border border-white/10 px-4 py-3 text-sm text-white focus:outline-none focus:border-[#00FF66]">
-                        <textarea name="message" placeholder="简述您的产品、资源 or 合作方向..." rows="3" required class="w-full bg-white/5 border border-white/10 px-4 py-3 text-sm text-white focus:outline-none focus:border-[#00FF66]"></textarea>
+                    <form id="coform" class="space-y-4">
+                        <input type="text" name="name" id="form-name" placeholder="您的姓名 / 称呼" required class="w-full bg-white/5 border border-white/10 px-4 py-3 text-sm text-white focus:outline-none focus:border-[#00FF66]">
+                        <input type="text" name="contact" id="form-contact" placeholder="您的微信 / 电话" required class="w-full bg-white/5 border border-white/10 px-4 py-3 text-sm text-white focus:outline-none focus:border-[#00FF66]">
+                        <textarea name="message" id="form-message" placeholder="简述您的产品、资源 or 合作方向..." rows="3" required class="w-full bg-white/5 border border-white/10 px-4 py-3 text-sm text-white focus:outline-none focus:border-[#00FF66]"></textarea>
                         <button type="submit" class="bg-[#00FF66] text-black font-bold text-xs uppercase tracking-widest px-8 py-4 hover:bg-white transition-colors">提交合作申请</button>
                     </form>
                 </div>
@@ -182,19 +180,16 @@
         let currentBannerIndex = 0;
         let bannerTimer = null;
 
-        // 1. 普通文本：换行变成“空一行”，段落感更好
         function formatText(text) {
             if (!text) return "";
             return String(text).replace(/\n/g, '<br><br>');
         }
 
-        // 2. 核心价值观专用：换行就是紧凑换行，绝不空出大长行距
         function formatCoreValues(text) {
             if (!text) return "";
             return String(text).replace(/\n/g, '<br>');
         }
 
-        // 智能垫底精美演示数据：保证你的飞书没同步成功前，网站依然完美丰富！
         const defaultMockData = {
             settings: {
                 core_values: "坚持纯正的创意灵魂，做有商业实效的设计。\n克制、精准、深度落地，让每一个物理场景都成为品牌的自媒体。",
@@ -295,10 +290,7 @@
         function renderAllContent(data) {
             allGlobalData = data;
             
-            // 价值观用 formatCoreValues 紧凑版换行
             document.getElementById('text-core-values').innerHTML = formatCoreValues((data.settings && data.settings.core_values) ? data.settings.core_values : defaultMockData.settings.core_values);
-            
-            // 其它长段落保持大行距
             document.getElementById('text-home-about').innerHTML = formatText((data.settings && data.settings.home_about) ? data.settings.home_about : defaultMockData.settings.home_about);
             document.getElementById('text-cocreate-desc').innerHTML = formatText((data.settings && data.settings.cocreate_desc) ? data.settings.cocreate_desc : defaultMockData.settings.cocreate_desc);
             document.getElementById('text-about-heading').innerHTML = formatCoreValues((data.settings && data.settings.about_heading) ? data.settings.about_heading : defaultMockData.settings.about_heading);
@@ -309,14 +301,12 @@
             document.getElementById('text-wechat').innerText = s.wechat || s.WECHAT || defaultMockData.settings.wechat;
             document.getElementById('text-email').innerText = s.email || s.EMAIL || defaultMockData.settings.email;
             
-            // 核心修复点：如果飞书没传 banner 数据过来，自动调用默认垫底图，拒绝空白
             const activeBanners = (data.banners && data.banners.length > 0) ? data.banners : defaultMockData.banners;
             setupBannerCarousel(activeBanners);
             
             const grids = { featured: document.getElementById('featured-grid'), spatial: document.getElementById('spatial-grid'), branding: document.getElementById('branding-grid'), events: document.getElementById('events-grid') };
             Object.values(grids).forEach(g => { if(g) g.innerHTML = ''; });
             
-            // 核心修复点：如果飞书没传案例数据过来，自动展示默认高端撑场面案例
             const activeCases = (data.cases && data.cases.length > 0) ? data.cases : defaultMockData.cases;
             activeCases.forEach(c => {
                 const imgArray = String(c.images || "").split(',');
@@ -386,7 +376,55 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
+        // 核心表单提交智能拦截拦截函数
+        document.getElementById('coform')?.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const name = document.getElementById('form-name').value;
+            const contact = document.getElementById('form-contact').value;
+            const message = document.getElementById('form-message').value;
+            
+            const params = new URLSearchParams();
+            params.append('name', name);
+            params.append('contact', contact);
+            params.append('message', message);
+            
+            try {
+                // 1. 尝试使用后台 API (data.js 对应的 Live 路由路径) 进行无感上传
+                const response = await fetch('/api/data', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: params.toString()
+                });
+                
+                if (response.ok) {
+                    alert('✨ 您的共创想法已成功送达飞书数据库，团队将尽快与您取得联系！');
+                    this.reset();
+                } else {
+                    // 2. 如果你的网站目前只是纯静态 GitHub Pages (无法运行后端 JavaScript 节点)
+                    // 自动安全降级为直接唤起飞书原生官方填写表单，保障输入信息绝不遗失！
+                    alert('正在为您接入飞书官方高安全登记通道...');
+                    window.open('https://xcn3g3vxlg7p.feishu.cn/share/base/form/shrcnYlsYdZ95Xry5W8ndaLDxgb', '_blank');
+                }
+            } catch (err) {
+                // 3. 各种网络异常报错的极端情况，统一开启兜底大门
+                window.open('https://xcn3g3vxlg7p.feishu.cn/share/base/form/shrcnYlsYdZ95Xry5W8ndaLDxgb', '_blank');
+            }
+        });
+
         async function init() {
+            // 优先链路：读取 Vercel 等全栈平台提供的实时动态接口
+            try {
+                const res = await fetch('/api/data');
+                if (res.ok) {
+                    const data = await res.json();
+                    if(data && (data.settings || data.cases || data.banners)) { 
+                        renderAllContent(data); 
+                        return;
+                    }
+                }
+            } catch (e) {}
+
+            // 次优链路：读取由 GitHub Actions 脚本生成的静态 data.json
             try {
                 const res = await fetch('./api/data.json');
                 if (res.ok) {
@@ -396,7 +434,9 @@
                         return;
                     }
                 }
-            } catch (e) { console.log("正在等待自动化流生成动态资产..."); }
+            } catch (e) {}
+            
+            // 绝不上演“空白窗”：提供高档视觉样板垫底
             renderAllContent(defaultMockData);
         }
         window.onload = init;
