@@ -2,13 +2,11 @@ name: Feishu Table Automation Sync
 
 on:
   schedule:
-    - cron: '0 * * * *' # 每小时自动执行一次
-  workflow_dispatch: # 允许随时手动执行
+    - cron: '0 * * * *'
+  workflow_dispatch:
 
 permissions:
   contents: write
-  pages: write      # 【核心新增权限：允许脚本直接发布网页】
-  id-token: write   # 【核心新增权限：允许脚本直接发布网页】
 
 jobs:
   sync-data:
@@ -133,25 +131,12 @@ jobs:
         shell: python
 
       - name: Commit and Push Changes
-        id: commit_step
         run: |
           git config --global user.name "Feishu Sync Bot"
           git config --global user.email "bot@github.com"
           git add api/data.json
-          # 如果没有变化就静默退出，如果有变化就提交并标记
-          if git diff --quiet && git diff --staged --quiet; then
-            echo "changed=false" >> $GITHUB_OUTPUT
-          else
+          # 如果有数据变化才提交。关键点：只要提交就会唤醒老门卫发布网页！
+          if ! git diff --quiet && git diff --staged --quiet; then
             git commit -m "Automated Feishu data refresh"
             git push
-            echo "changed=true" >> $GITHUB_OUTPUT
           fi
-
-      # 【终极强制扣动扳机：只要数据变了，原地直接生成并发布网页，不需要等门卫睡醒】
-      - name: Upload Pages Artifact
-        uses: actions/upload-pages-artifact@v2
-        with:
-          path: '.'
-
-      - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v2
