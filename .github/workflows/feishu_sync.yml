@@ -38,7 +38,6 @@ jobs:
           git add api/data.json
           git diff --quiet && git diff --staged --quiet || (git commit -m "Update data" && git push)
 
-      # 关键点：这一步会自动触发 GitHub Pages 的构建与发布
       - name: Setup Pages
         uses: actions/configure-pages@v4
       - name: Upload artifact
