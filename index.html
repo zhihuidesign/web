@@ -10,7 +10,7 @@
         .page-section { opacity: 0; transition: opacity 0.4s ease-in-out; display: none; }
         .page-section.active { opacity: 1; display: block; }
         .font-heading { font-weight: 900; letter-spacing: -0.04em; }
-        /* 全局段落间距 */
+        /* 全局段落美化间距 */
         p { margin-bottom: 1.5rem; line-height: 1.6; }
     </style>
 </head>
@@ -121,7 +121,7 @@
                     <form id="coform" method="POST" action="https://xcn3g3vxlg7p.feishu.cn/share/base/form/shrcnYlsYdZ95Xry5W8ndaLDxgb" target="hidden_iframe" onsubmit="window.hasSubmitted=true;" class="space-y-4">
                         <input type="text" name="name" placeholder="您的姓名 / 称呼" required class="w-full bg-white/5 border border-white/10 px-4 py-3 text-sm text-white focus:outline-none focus:border-[#00FF66]">
                         <input type="text" name="contact" placeholder="您的微信 / 电话" required class="w-full bg-white/5 border border-white/10 px-4 py-3 text-sm text-white focus:outline-none focus:border-[#00FF66]">
-                        <textarea name="message" placeholder="简述您的产品、资源或合作方向..." rows="3" required class="w-full bg-white/5 border border-white/10 px-4 py-3 text-sm text-white focus:outline-none focus:border-[#00FF66]"></textarea>
+                        <textarea name="message" placeholder="简述您的产品、资源 or 合作方向..." rows="3" required class="w-full bg-white/5 border border-white/10 px-4 py-3 text-sm text-white focus:outline-none focus:border-[#00FF66]"></textarea>
                         <button type="submit" class="bg-[#00FF66] text-black font-bold text-xs uppercase tracking-widest px-8 py-4 hover:bg-white transition-colors">提交合作申请</button>
                     </form>
                 </div>
@@ -182,7 +182,7 @@
         let currentBannerIndex = 0;
         let bannerTimer = null;
 
-        // 优化点：将原来的 <br> 替换为 <br><br>，确保飞书段落之间能空出一整行
+        // 保姆级优化：修复段落换行逻辑，将飞书的换行符转换成两块换行标签，实现“空一行”的目标视觉
         function formatText(text) {
             if (!text) return "";
             return String(text).replace(/\n/g, '<br><br>');
@@ -191,11 +191,11 @@
         const defaultMockData = {
             settings: {
                 core_values: "坚持纯正的创意灵魂，做有商业实效的设计。\n克制、精准、深度落地，让每一个物理场景都成为品牌的自媒体。",
-                home_about: "<p>一个核心大脑，驱动一整条顶级供应链。</p><p>知汇文化彻底打破了传统公司臃肿、层层汇报的低效机制。</p><p>你的项目从策略定调到后期施工深化，全部由创意总监亲自操刀、一管到底。</p>",
-                cocreate_desc: "<p>知汇文化不仅承接设计服务，更积极参与未来产品的共同开发与销售。</p><p>我们面向全球优秀的渠道方、技术方及工厂，开放生态合作入口：</p>",
-                about_heading: "一个核心大脑，<br>驱动一整条顶级供应链。",
-                about_detail: "<p>我们彻底打破了传统品牌设计公司臃肿低效机制。在知汇文化，没有初级实习生套模板接盘。</p><p>作为商业场景的“全栈架构师”，知汇文化提供强有力的纯正创意灵魂。</p><p>而重资产执行环节，则由我们严选并合作多年的顶级外部供应链无缝承接。</p>",
-                PHONE: "+86 186-6497-9841", WECHAT: "joyhanDD", EMAIL: "2664739667@qq.com"
+                home_about: "一个核心大脑，驱动一整条顶级供应链。\n\n知汇文化彻底打破了传统公司臃肿、层层汇报的低效机制。\n\n你的项目从策略定调到后期施工深化，全部由创意总监亲自操刀、一管到底。",
+                cocreate_desc: "知汇文化不仅承接设计服务，更积极参与未来产品的共同开发与销售。\n\n我们面向全球优秀的渠道方、技术方及工厂，开放生态合作入口：",
+                about_heading: "一个核心大脑，\n驱动一整条顶级供应链。",
+                about_detail: "我们彻底打破了传统品牌设计公司臃肿低效机制。在知汇文化，没有初级实习生套模板接盘。\n\n作为商业场景的“全栈架构师”，知汇文化提供强有力的纯正创意灵魂。\n\n而重资产执行环节，则由我们严选并合作多年的顶级外部供应链无缝承接。",
+                phone: "+86 186-6497-9841", wechat: "joyhanDD", email: "2664739667@qq.com"
             },
             banners: [],
             cases: []
@@ -279,16 +279,19 @@
 
         function renderAllContent(data) {
             allGlobalData = data;
+            
+            // 每一个文本注入点全部包裹 formatText，实现多行文本的完美排版空行
             document.getElementById('text-core-values').innerHTML = formatText((data.settings && data.settings.core_values) ? data.settings.core_values : defaultMockData.settings.core_values);
             document.getElementById('text-home-about').innerHTML = formatText((data.settings && data.settings.home_about) ? data.settings.home_about : defaultMockData.settings.home_about);
             document.getElementById('text-cocreate-desc').innerHTML = formatText((data.settings && data.settings.cocreate_desc) ? data.settings.cocreate_desc : defaultMockData.settings.cocreate_desc);
             document.getElementById('text-about-heading').innerHTML = formatText((data.settings && data.settings.about_heading) ? data.settings.about_heading : defaultMockData.settings.about_heading);
             document.getElementById('text-about-detail').innerHTML = formatText((data.settings && data.settings.about_detail) ? data.settings.about_detail : defaultMockData.settings.about_detail);
             
-            // 绑定商务联络数据
-            document.getElementById('text-phone').innerHTML = (data.settings && data.settings.phone) ? data.settings.phone : (data.settings && data.settings.PHONE ? data.settings.PHONE : "--");
-            document.getElementById('text-wechat').innerHTML = (data.settings && data.settings.wechat) ? data.settings.wechat : (data.settings && data.settings.WECHAT ? data.settings.WECHAT : "--");
-            document.getElementById('text-email').innerHTML = (data.settings && data.settings.email) ? data.settings.email : (data.settings && data.settings.EMAIL ? data.settings.EMAIL : "--");
+            // 精准映射商务联络数据，防止大小写混淆
+            let s = data.settings || {};
+            document.getElementById('text-phone').innerText = s.phone || s.PHONE || defaultMockData.settings.phone;
+            document.getElementById('text-wechat').innerText = s.wechat || s.WECHAT || defaultMockData.settings.wechat;
+            document.getElementById('text-email').innerText = s.email || s.EMAIL || defaultMockData.settings.email;
             
             const activeBanners = (data.banners && data.banners.length) ? data.banners : [];
             setupBannerCarousel(activeBanners);
@@ -298,15 +301,15 @@
             
             const activeCases = (data.cases && data.cases.length) ? data.cases : [];
             activeCases.forEach(c => {
-                const imgArray = c.images.split(',');
-                const thumbnail = imgArray[0].trim();
+                const imgArray = String(c.images || "").split(',');
+                const thumbnail = imgArray[0] ? imgArray[0].trim() : "";
                 const cardHtml = `
                     <div class="group cursor-pointer" onclick="openCaseDetail('${c.id}')">
                         <div class="overflow-hidden bg-neutral-200 aspect-[16/10] w-full mb-4">
                             <img src="${thumbnail}" class="w-full h-full object-cover transform scale-100 group-hover:scale-105 transition-transform duration-500">
                         </div>
-                        <span class="font-mono text-[11px] text-black/40 tracking-wider block mb-1">${c.tag}</span>
-                        <h3 class="font-heading text-base md:text-lg leading-tight mb-2 group-hover:underline">${c.title}</h3>
+                        <span class="font-mono text-[11px] text-black/40 tracking-wider block mb-1">${c.tag || ''}</span>
+                        <h3 class="font-heading text-base md:text-lg leading-tight mb-2 group-hover:underline">${c.title || ''}</h3>
                         <p class="text-xs text-black/60 line-clamp-2 leading-relaxed">${formatText(c.desc)}</p>
                     </div>`;
                 if (c.featured && grids.featured) grids.featured.innerHTML += cardHtml;
@@ -321,12 +324,12 @@
             if(currentSection && currentSection.id !== 'case-detail') previousPageId = currentSection.id; 
             const targetCase = allGlobalData.cases.find(c => c.id == id);
             if (!targetCase) return;
-            document.getElementById('detail-title').innerText = targetCase.title;
-            document.getElementById('detail-tag').innerText = targetCase.tag;
+            document.getElementById('detail-title').innerText = targetCase.title || '';
+            document.getElementById('detail-tag').innerText = targetCase.tag || '';
             document.getElementById('detail-desc').innerHTML = formatText(targetCase.desc);
             const flowCon = document.getElementById('detail-images-flow');
             flowCon.innerHTML = '';
-            targetCase.images.split(',').forEach(imgUrl => {
+            String(targetCase.images || "").split(',').forEach(imgUrl => {
                 if(imgUrl.trim()) flowCon.innerHTML += `<div class="w-full bg-neutral-100"><img src="${imgUrl.trim()}" class="w-full object-contain"></div>`;
             });
             switchPage('case-detail');
@@ -372,7 +375,7 @@
                         return;
                     }
                 }
-            } catch (e) { console.log("等待数据流接入。"); }
+            } catch (e) { console.log("正在等待自动化流生成动态资产..."); }
             renderAllContent(defaultMockData);
         }
         window.onload = init;
