@@ -28,7 +28,7 @@
             <a href="#" onclick="switchPage('about')" class="nav-link text-black hover:opacity-50 transition-opacity">关于知汇</a>
         </div>
         
-        <!-- 移动端汉堡菜单触控按钮（修复 image_b59f7f.png 的弹窗问题） -->
+        <!-- 移动端汉堡菜单触控按钮 -->
         <div class="md:hidden text-sm font-bold cursor-pointer select-none px-3 py-1 border border-black/10 rounded transition-all" id="mobile-menu-btn" onclick="toggleMobileMenu()">MENU</div>
         
         <!-- 移动端专属下拉菜单抽屉 -->
@@ -50,7 +50,6 @@
             
             <!-- 工作 SECTION (首页) -->
             <section id="home" class="page-section active">
-                <!-- 升级：现代高端智能轮播广告橱窗 -->
                 <div class="w-full relative overflow-hidden bg-neutral-300 aspect-[21/9] md:aspect-[3/1] border border-black/5 my-4 group" id="banner-slider-wrapper">
                     <div id="banner-track" class="flex w-full h-full transition-transform duration-700 ease-[cubic-bezier(0.25,1,0.5,1)]"></div>
                     <div id="banner-dots" class="absolute bottom-4 right-6 md:bottom-6 md:right-12 z-20 flex space-x-2.5 items-center"></div>
@@ -111,7 +110,7 @@
                     <div class="border border-white/10 p-8 hover:border-[#00FF66] transition-colors group">
                         <div class="text-3xl mb-6">📦</div>
                         <h3 class="text-xl font-bold mb-3">产品共同研发</h3>
-                        <p class="text-white/60 text-sm leading-relaxed">提供强设计和商业策略入股，与渠道和技术方共同打造爆款产品。</p>
+                        <p class="text-white/60 text-sm leading-relaxed">提供强设计和商业策略入股，与渠道 and 技术方共同打造爆款产品。</p>
                     </div>
                     <div class="border border-white/10 p-8 hover:border-[#00FF66] transition-colors group">
                         <div class="text-3xl mb-6">🧸</div>
@@ -193,6 +192,7 @@
         let currentBannerIndex = 0;
         let bannerTimer = null;
 
+        // 完美请回你之前的所有默认高端预览图片与案例数据
         const defaultMockData = {
             settings: {
                 core_values: "坚持纯正的创意灵魂，做有商业实效的设计。克制、精准、深度落地，让每一个物理场景都成为品牌的自媒体。",
@@ -218,26 +218,17 @@
                 { id: "204", title: "海外独立设计师买手店LOGO与几何视觉标识矩阵", category: "branding", tag: "品牌视觉 / 标志设计", desc: "基于极致无衬线字体的现代超级符号。通过高度理性的比例重构，为其主线及副线提供全套服装吊牌、织唛系统规范。", images: "https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&w=1200&q=80", featured: false },
                 { id: "301", title: "户外音乐节‘数字 Oasis’现场全案跨媒介视觉系统", category: "events", tag: "活动视觉 / 现场全案", desc: "为主舞台、电子分舞台及互动创意市集区输出视觉流。确保超大户外场景下的色彩纯正度与安全导示的高清识别度。", images: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=1200&q=80,https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=1200&q=80", featured: true },
                 { id: "302", title: "年度科技新品发布会三维巨幕舞台舞美空间设计", category: "events", tag: "活动视觉 / 舞美空间", desc: "全景超长环绕大屏3D视觉排版编排。利用舞台几何构造与大面积冰屏结合，打造极具未来感的声光电一体化叙事空间。", images: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1200&q=80", featured: false },
-                { id: "303", title: "潮流生活方式文化节核心传播物料与衍生品视觉", category: "events", tag: "活动视觉 / 海报物料", desc: "融合高饱和度潮流发光元素。提供全场导视路牌旗帜、创意入场手环及定制联名编织袋包装设计，极具线上社群传播属性。", images: "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&w=1200&q=80", featured: false },
+                { id: "303", title: "潮流生活方式文化节核心传播物料与衍生品视觉", category: "events", tag: "活动视觉 / 海报物料", desc: "融合高饱和度潮流发光元素。提供全场导视路牌旗帜、创意入场手环及定制联名编织袋包装设计，极极具线上社群传播属性。", images: "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&w=1200&q=80", featured: false },
                 { id: "304", title: "豪华纯电跑车私密新品品鉴会美术馆级公关会展视觉", category: "events", tag: "活动视觉 / 会展视觉", desc: "尊享看车空间全案。使用极致对称的极简黑色背景板，配合雕塑级的专业定向线光源，让车辆本身成为唯一的物理艺术品。", images: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1200&q=80", featured: false }
             ]
         };
 
-        // 核心技术：移动端导航抽屉开关
         function toggleMobileMenu() {
             const dropdown = document.getElementById('mobile-dropdown');
-            if (dropdown.classList.contains('hidden')) {
-                dropdown.classList.remove('hidden');
-            } else {
-                dropdown.classList.add('hidden');
-            }
+            if (dropdown.classList.contains('hidden')) { dropdown.classList.remove('hidden'); } else { dropdown.classList.add('hidden'); }
         }
 
-        // 移动端点击具体页面后的动作（切换并闭合菜单）
-        function handleMobileNav(pageId) {
-            switchPage(pageId);
-            toggleMobileMenu();
-        }
+        function handleMobileNav(pageId) { switchPage(pageId); toggleMobileMenu(); }
 
         function setupBannerCarousel(banners) {
             const track = document.getElementById('banner-track');
@@ -397,14 +388,16 @@
         }
 
         async function init() {
+            // 一进来立刻渲染这批精美的本地预览图片和案例数据，保证用户不会看到空白
             renderAllContent(defaultMockData);
             try {
-                const res = await fetch('/api/data');
+                // 如果后续成功通过 GitHub Actions 同步拉取到了最新的飞书数据，会自动无缝覆盖成你的真实飞书内容
+                const res = await fetch('./api/data.json');
                 if (res.ok) {
                     const data = await res.json();
                     if(data && (data.settings || data.cases)) { renderAllContent(data); }
                 }
-            } catch (e) { console.log("独立静态端平稳运行。"); }
+            } catch (e) { console.log("本地缓存平稳流转。"); }
         }
         window.onload = init;
     </script>
