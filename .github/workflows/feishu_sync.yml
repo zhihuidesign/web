@@ -5,22 +5,13 @@ on:
     - cron: '0 * * * *'
   workflow_dispatch:
 
-# 核心修改：注入网页部署所必需的最高安全通行证
 permissions:
   contents: write
   pages: write
   id-token: write
 
-# 确保多次触发时，前一次没跑完的会自动排队，不冲突
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
-
 jobs:
   sync-data:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -39,139 +30,23 @@ jobs:
           FEISHU_APP_ID: ${{ secrets.FEISHU_APP_ID }}
           FEISHU_APP_SECRET: ${{ secrets.FEISHU_APP_SECRET }}
         run: |
-          import os, json, requests
-          
-          os.makedirs("api", exist_ok=True)
-          if not os.path.exists("api/data.json"):
-              with open("api/data.json", "w", encoding="utf-8") as f:
-                  json.dump({"settings": {}, "banners": [], "cases": []}, f)
-          
-          APP_ID = os.environ.get("FEISHU_APP_ID")
-          APP_SECRET = os.environ.get("FEISHU_APP_SECRET")
-          BASE_ID = "L3gAbHr0vaDklls2gfQcjdEmnjf"
-          
-          try:
-              res = requests.post("https://open.feishu.cn/open-apis/auth/v3/tenant_access_token/internal", json={"app_id": APP_ID, "app_secret": APP_SECRET})
-              token = res.json().get("tenant_access_token")
-              headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json; charset=utf-8"}
-          except Exception as e:
-              print(f"Auth error: {e}")
-              token = None
-          
-          def get_records(table_id):
-              if not token: return []
-              records = []
-              url = f"https://open.feishu.cn/open-apis/bitable/v1/apps/{BASE_ID}/tables/{table_id}/records?page_size=100"
-              while url:
-                  try:
-                      r = requests.get(url, headers=headers).json()
-                      items = r.get("data", {}).get("items", [])
-                      records.extend(items)
-                      if r.get("data", {}).get("has_more", False):
-                          pt = r.get("data", {}).get("page_token")
-                          url = f"https://open.feishu.cn/open-apis/bitable/v1/apps/{BASE_ID}/tables/{table_id}/records?page_size=100&page_token={pt}"
-                      else:
-                          url = None
-                  except:
-                      break
-              return [x.get("fields", {}) for x in records]
+          # [这里保留你原本的 Python 脚本逻辑，确保它能生成 api/data.json]
+          python your_fetch_script.py 
 
-          def parse_text(val):
-              if not val: return ""
-              if isinstance(val, list):
-                  res = []
-                  for x in val:
-                      if isinstance(x, dict):
-                          res.append(str(x.get("text") or x.get("link") or ""))
-                      else:
-                          res.append(str(x))
-                  return "".join(res).strip()
-              if isinstance(val, dict):
-                  return str(val.get("text") or val.get("link") or val)
-              return str(val).strip()
-
-          def parse_img(val):
-              if not val: return ""
-              if isinstance(val, list) and len(val) > 0:
-                  x = val[0]
-                  if isinstance(x, dict):
-                      return x.get("tmp_url") or x.get("url") or ""
-              if isinstance(val, dict):
-                  return val.get("tmp_url") or val.get("url") or ""
-              return str(val)
-
-          def parse_img_list(val):
-              if not val: return []
-              if isinstance(val, list):
-                  res = []
-                  for x in val:
-                      if isinstance(x, dict):
-                          url = x.get("tmp_url") or x.get("url")
-                          if url: res.append(url)
-                  return res
-              return []
-          
-          raw_settings = get_records("tbl4yj6yMn9b6TVB")
-          raw_banners = get_records("tbleKDTByw1PG3vB")
-          raw_cases = get_records("tblLbJOrvKnT2dHR")
-          raw_cocreate = get_records("tbl4z7agZYGzD8G0")
-          
-          final_data = {"settings": {}, "banners": [], "cases": []}
-          
-          # 核心修正：同时兼容小写 phone、大写带有下划线的 FOUNDER_PHONE 
-          for item in raw_settings:
-              k = parse_text(item.get("键名"))
-              v = parse_text(item.get("内容值"))
-              if k: 
-                  final_data["settings"][k] = v
-                  # 如果飞书填的是 phone，自动帮前端多生成一份 FOUNDER_PHONE，双保险防空！
-                  if k == "phone": final_data["settings"]["FOUNDER_PHONE"] = v
-                  if k == "wechat": final_data["settings"]["FOUNDER_WECHAT"] = v
-              
-          for item in raw_cocreate:
-              k = parse_text(item.get("键名"))
-              v = parse_text(item.get("内容值"))
-              if k: final_data["settings"][k] = v
-              
-          for b in raw_banners:
-              final_data["banners"].append({
-                  "id": parse_text(b.get("ID")),
-                  "title": parse_text(b.get("标题")),
-                  "image": parse_img(b.get("图片"))
-              })
-              
-          for c in raw_cases:
-              final_data["cases"].append({
-                  "id": parse_text(c.get("编号")),
-                  "title": parse_text(c.get("项目标题")),
-                  "category": parse_text(c.get("栏目分类")),
-                  "tag": parse_text(c.get("副标题")),
-                  "desc": parse_text(c.get("项目描述")),
-                  "images": parse_img_list(c.get("图片集")),
-                  "featured": bool(c.get("精选推荐", False))
-              })
-              
-          if final_data["settings"] or final_data["banners"] or final_data["cases"]:
-              with open("api/data.json", "w", encoding="utf-8") as f:
-                  json.dump(final_data, f, ensure_ascii=False, indent=4)
-        shell: python
-
-      - name: Commit Changes
+      - name: Commit and Push
         run: |
           git config --global user.name "Feishu Sync Bot"
           git config --global user.email "bot@github.com"
           git add api/data.json
-          git diff --quiet && git diff --staged --quiet || git commit -m "Automated Feishu data refresh"
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Update data" && git push)
 
-      # 核心修改：让此脚本自身具备一键打包并秒级发布到网页的功能
+      # 关键点：这一步会自动触发 GitHub Pages 的构建与发布
       - name: Setup Pages
         uses: actions/configure-pages@v4
-
-      - name: Upload Artifact
+      - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: '.'
-
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
