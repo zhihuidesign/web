@@ -89,7 +89,6 @@
                 <div id="events-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
             </section>
 
-            <!-- 优化：选项 A - 极致紧凑吸附（-mt-16 pt-0） -->
             <section id="cocreate" class="page-section -mx-6 md:-mx-12 -mt-16 px-6 md:px-12 pt-0 pb-24 bg-[#1C1C1C] text-white space-y-16">
                 <div class="max-w-4xl">
                     <span class="text-[#00FF66] font-mono tracking-widest text-sm uppercase block mb-2">// ZHIHUI CO-CREATION LAB</span>
@@ -115,14 +114,11 @@
                     </div>
                 </div>
 
-                <div class="max-w-xl border-t border-white/10 pt-12">
+                <div class="max-w-2xl border-t border-white/10 pt-12">
                     <h3 class="text-lg font-bold mb-6">提交您的共创想法</h3>
-                    <form id="coform" class="space-y-4">
-                        <input type="text" name="name" id="form-name" placeholder="您的姓名 / 称呼" required class="w-full bg-white/5 border border-white/10 px-4 py-3 text-sm text-white focus:outline-none focus:border-[#00FF66]">
-                        <input type="text" name="contact" id="form-contact" placeholder="您的微信 / 电话" required class="w-full bg-white/5 border border-white/10 px-4 py-3 text-sm text-white focus:outline-none focus:border-[#00FF66]">
-                        <textarea name="message" id="form-message" placeholder="简述您的产品、资源 or 合作方向..." rows="3" required class="w-full bg-white/5 border border-white/10 px-4 py-3 text-sm text-white focus:outline-none focus:border-[#00FF66]"></textarea>
-                        <button type="submit" class="bg-[#00FF66] text-black font-bold text-xs uppercase tracking-widest px-8 py-4 hover:bg-white transition-colors">提交合作申请</button>
-                    </form>
+                    <div class="w-full bg-white rounded-xl overflow-hidden shadow-2xl transition-all border border-white/5" style="height: 680px;">
+                        <iframe src="https://xcn3g3vxlg7p.feishu.cn/share/base/form/shrcnYlsYdZ95Xry5W8ndaLDxgb" class="w-full h-full border-none"></iframe>
+                    </div>
                 </div>
             </section>
 
@@ -371,68 +367,4 @@
                 document.querySelectorAll('.nav-link').forEach(l => { l.classList.remove('text-white'); l.classList.add('text-black'); });
                 if(mobileDrop) {
                     mobileDrop.style.backgroundColor = '#F4F4F4';
-                    document.querySelectorAll('.mobile-nav-link').forEach(l => { l.classList.remove('text-white', 'border-white/5'); l.classList.add('text-black', 'border-black/5'); });
-                }
-            }
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        document.getElementById('coform')?.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const name = document.getElementById('form-name').value;
-            const contact = document.getElementById('form-contact').value;
-            const message = document.getElementById('form-message').value;
-            
-            const params = new URLSearchParams();
-            params.append('name', name);
-            params.append('contact', contact);
-            params.append('message', message);
-            
-            try {
-                const response = await fetch('/api/data', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: params.toString()
-                });
-                
-                if (response.ok) {
-                    alert('✨ 您的共创想法已成功送达飞书数据库，团队将尽快与您取得联系！');
-                    this.reset();
-                } else {
-                    alert('正在为您接入飞书官方高安全登记通道...');
-                    window.open('https://xcn3g3vxlg7p.feishu.cn/share/base/form/shrcnYlsYdZ95Xry5W8ndaLDxgb', '_blank');
-                }
-            } catch (err) {
-                window.open('https://xcn3g3vxlg7p.feishu.cn/share/base/form/shrcnYlsYdZ95Xry5W8ndaLDxgb', '_blank');
-            }
-        });
-
-        async function init() {
-            try {
-                const res = await fetch('/api/data');
-                if (res.ok) {
-                    const data = await res.json();
-                    if(data && (data.settings || data.cases || data.banners)) { 
-                        renderAllContent(data); 
-                        return;
-                    }
-                }
-            } catch (e) {}
-
-            try {
-                const res = await fetch('./api/data.json');
-                if (res.ok) {
-                    const data = await res.json();
-                    if(data && (data.settings || data.cases || data.banners)) { 
-                        renderAllContent(data); 
-                        return;
-                    }
-                }
-            } catch (e) {}
-            
-            renderAllContent(defaultMockData);
-        }
-        window.onload = init;
-    </script>
-</body>
-</html>
+                    document.querySelectorAll('.mobile-nav-link').forEach(l => { l.classList.remove('text-white', 'border
