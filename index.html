@@ -213,6 +213,19 @@
 
         function handleMobileNav(pageId) { switchPage(pageId); toggleMobileMenu(); }
 
+        // 🌟【万能媒体生成器】完美进化：通过 hasControls 智能剔除 Banner 视频的控制条
+        function generateMediaTag(url, extraClass = "", hasControls = true) {
+            if (!url) return "";
+            const cleanUrl = String(url).trim();
+            if (cleanUrl.toLowerCase().endsWith('.mp4')) {
+                // 如果 hasControls 为 true 就加上控制条（详情页），为 false 就不加控制条（实现苹果官网 Banner 风）
+                const controlsAttr = hasControls ? "controls" : "";
+                return `<video src="${cleanUrl}" ${controlsAttr} autoplay loop muted playsinline class="${extraClass}"></video>`;
+            } else {
+                return `<img src="${cleanUrl}" class="${extraClass}">`;
+            }
+        }
+
         function setupBannerCarousel(banners) {
             const track = document.getElementById('banner-track');
             const dotsContainer = document.getElementById('banner-dots');
@@ -227,11 +240,14 @@
                 document.getElementById('banner-slider-wrapper').style.display = 'block';
             }
             banners.forEach((b, idx) => {
+                // 🌟 这里传入 false：让首页大 Banner 的视频像海报一样静静流转，绝不显示原生播放条
+                const mediaHtml = generateMediaTag(b.image, "w-full h-full object-cover", false);
+                
                 track.innerHTML += `
                     <div class="w-full h-full flex-shrink-0 relative">
-                        <img src="${b.image}" class="w-full h-full object-cover">
-                        <div class="absolute inset-0 bg-black/40 flex items-end pb-4 px-6 md:pb-6 md:px-12">
-                            <div class="text-white max-w-4xl mb-2 md:mb-4">
+                        ${mediaHtml}
+                        <div class="absolute inset-0 bg-black/40 flex items-end pb-4 px-6 md:pb-6 md:px-12 pointer-events-none">
+                            <div class="text-white max-w-4xl mb-2 md:mb-4 pointer-events-auto">
                                 <span class="font-mono text-[10px] tracking-widest uppercase bg-black/60 px-2 py-1 mb-2 inline-block">// FOCUS / 深度操盘推介</span>
                                 <h2 class="font-heading text-lg md:text-2xl lg:text-3xl leading-tight">${b.title}</h2>
                             </div>
@@ -307,10 +323,17 @@
             activeCases.forEach(c => {
                 const imgArray = String(c.images || "").split(',');
                 const thumbnail = imgArray[0] ? imgArray[0].trim() : "";
+                
+                // 列表封面图规定：硬性静止不自播，确保首页清爽克制
+                let isVideoThumb = thumbnail.toLowerCase().endsWith('.mp4');
+                let cardMediaHtml = isVideoThumb 
+                    ? `<video src="${thumbnail}" preload="metadata" class="w-full h-full object-cover transform scale-100 group-hover:scale-105 transition-transform duration-500"></video>`
+                    : `<img src="${thumbnail}" class="w-full h-full object-cover transform scale-100 group-hover:scale-105 transition-transform duration-500">`;
+
                 const cardHtml = `
                     <div class="group cursor-pointer" onclick="openCaseDetail('${c.id}')">
-                        <div class="overflow-hidden bg-neutral-200 aspect-[16/10] w-full mb-4">
-                            <img src="${thumbnail}" class="w-full h-full object-cover transform scale-100 group-hover:scale-105 transition-transform duration-500">
+                        <div class="overflow-hidden bg-neutral-200 aspect-[16/10] w-full mb-4 relative">
+                            ${cardMediaHtml}
                         </div>
                         <span class="font-mono text-[11px] text-black/40 tracking-wider block mb-1">${c.tag || ''}</span>
                         <h3 class="font-heading text-base md:text-lg leading-tight mb-2 group-hover:underline">${c.title || ''}</h3>
@@ -336,8 +359,13 @@
             document.getElementById('detail-desc').innerHTML = formatText(targetCase.desc);
             const flowCon = document.getElementById('detail-images-flow');
             flowCon.innerHTML = '';
+            
             String(targetCase.images || "").split(',').forEach(imgUrl => {
-                if(imgUrl.trim()) flowCon.innerHTML += `<div class="w-full bg-neutral-100"><img src="${imgUrl.trim()}" class="w-full object-contain"></div>`;
+                if(imgUrl.trim()) {
+                    // 🌟 这里传入 true：子页面大片需要完整的播放、暂停、进度条、全屏控件
+                    const detailMediaHtml = generateMediaTag(imgUrl.trim(), "w-full object-contain", true);
+                    flowCon.innerHTML += `<div class="w-full bg-neutral-100">${detailMediaHtml}</div>`;
+                }
             });
             switchPage('case-detail');
         }
