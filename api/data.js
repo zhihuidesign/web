@@ -38,7 +38,7 @@ export default async function handler(req, res) {
     };
 
     const [settingsRaw, bannersRaw, casesRaw] = await Promise.all([
-      fetchTable("Settings"), fetchTable("Banners"), fetchTable("Cases")
+      fetchTable("tbl4yj6yMn9b6TVB"), fetchTable("tbleKDTByw1PG3vB"), fetchTable("tblLbJOrvKnT2dHR")
     ]);
 
     // 智能解析 Settings (纯中文表头：键名、内容值)
