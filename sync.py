@@ -96,18 +96,28 @@ def sync():
         if key:
             settings[key] = val
 
-    # 3. 智能解析 Banners 表
+# 3. 智能解析 Banners 表 (已增加 DEBUG 模式)
     banners = []
+    print(f"DEBUG: 正在分析 Banners 表，共抓取到 {len(banners_raw)} 条记录")
+    
     for item in banners_raw:
         fields = item.get("fields", {})
+        # DEBUG: 打印原始数据，帮你排查字段名
+        print(f"DEBUG: 当前行数据结构: {fields}")
+        
+        # 请在这里核对：代码中的 '编号', '广告标题', '图片链接' 
+        # 是否和你飞书表格里的表头文字“一模一样”？
         img_urls = parse_images(fields.get("图片链接"))
         img_url = img_urls[0] if img_urls else ""
+        
         if img_url:
             banners.append({
                 "id": parse_text(fields.get("编号", "b-default")),
                 "title": parse_text(fields.get("广告标题", "")),
                 "image": img_url
             })
+        else:
+            print("DEBUG: 该条数据因未解析到图片链接被跳过")
 
     # 4. 智能解析 Cases 案例表
     cases = []
