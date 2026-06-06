@@ -89,7 +89,6 @@
                 <div id="events-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
             </section>
 
-            <!-- 优化：选项 A - 极致紧凑吸附（-mt-16 pt-0） -->
             <section id="cocreate" class="page-section -mx-6 md:-mx-12 -mt-16 px-6 md:px-12 pt-0 pb-24 bg-[#1C1C1C] text-white space-y-16">
                 <div class="max-w-4xl">
                     <span class="text-[#00FF66] font-mono tracking-widest text-sm uppercase block mb-2">// ZHIHUI CO-CREATION LAB</span>
@@ -115,14 +114,12 @@
                     </div>
                 </div>
 
-                <div class="max-w-xl border-t border-white/10 pt-12">
+                <!-- 内嵌高阶飞书表单卡片 -->
+                <div class="max-w-2xl border-t border-white/10 pt-12">
                     <h3 class="text-lg font-bold mb-6">提交您的共创想法</h3>
-                    <form id="coform" class="space-y-4">
-                        <input type="text" name="name" id="form-name" placeholder="您的姓名 / 称呼" required class="w-full bg-white/5 border border-white/10 px-4 py-3 text-sm text-white focus:outline-none focus:border-[#00FF66]">
-                        <input type="text" name="contact" id="form-contact" placeholder="您的微信 / 电话" required class="w-full bg-white/5 border border-white/10 px-4 py-3 text-sm text-white focus:outline-none focus:border-[#00FF66]">
-                        <textarea name="message" id="form-message" placeholder="简述您的产品、资源 or 合作方向..." rows="3" required class="w-full bg-white/5 border border-white/10 px-4 py-3 text-sm text-white focus:outline-none focus:border-[#00FF66]"></textarea>
-                        <button type="submit" class="bg-[#00FF66] text-black font-bold text-xs uppercase tracking-widest px-8 py-4 hover:bg-white transition-colors">提交合作申请</button>
-                    </form>
+                    <div class="w-full bg-white rounded-xl overflow-hidden shadow-2xl transition-all border border-white/5" style="height: 680px;">
+                        <iframe src="https://xcn3g3vxlg7p.feishu.cn/share/base/form/shrcnYlsYdZ95Xry5W8ndaLDxgb" class="w-full h-full border-none"></iframe>
+                    </div>
                 </div>
             </section>
 
@@ -194,7 +191,7 @@
         const defaultMockData = {
             settings: {
                 core_values: "坚持纯正的创意灵魂，做有商业实效的设计。\n克制、精准、深度落地，让每一个物理场景都成为品牌的自媒体。",
-                home_about: "一个核心大脑，驱动一整条顶级供应链。\n知汇文化彻底打破了传统公司臃肿、层层汇报的低效机制。你的项目从策略定调到后期施工深化，全部由创意总监亲自操刀、一管到底。",
+                home_about: "一个核心大脑，驱动一整条顶级供应链。\n知汇文化彻底打破了传统 company 臃肿、层层汇报的低效机制。你的项目从策略定调到后期施工深化，全部由创意总监亲自操刀、一管到底。",
                 cocreate_desc: "知汇文化不仅承接设计服务，更积极参与未来产品的共同开发与销售。\n我们面向全球优秀的渠道方、技术方及工厂，开放生态合作入口：",
                 about_heading: "一个核心大脑，\n驱动一整条顶级供应链。",
                 about_detail: "我们彻底打破了传统品牌设计公司臃肿低效机制。在知汇文化，没有初级实习生套模板接盘。\n作为商业场景的“全栈架构师”，知汇文化提供强有力的纯正创意灵魂。而重资产执行环节，则由我们严选并合作多年的顶级外部供应链无缝承接。",
@@ -289,26 +286,29 @@
         }
 
         function renderAllContent(data) {
-            allGlobalData = data;
+            // 💡 健壮性优化：如果传入的数据是飞书同步失败的空壳数据，强制合并默认的精美视觉模板
+            const isFeishuEmpty = !data || !data.settings || Object.keys(data.settings).length === 0;
+            const finalSettings = isFeishuEmpty ? defaultMockData.settings : data.settings;
+            const activeBanners = (data && data.banners && data.banners.length > 0) ? data.banners : defaultMockData.banners;
+            const activeCases = (data && data.cases && data.cases.length > 0) ? data.cases : defaultMockData.cases;
+
+            allGlobalData = { settings: finalSettings, banners: activeBanners, cases: activeCases };
             
-            document.getElementById('text-core-values').innerHTML = formatCoreValues((data.settings && data.settings.core_values) ? data.settings.core_values : defaultMockData.settings.core_values);
-            document.getElementById('text-home-about').innerHTML = formatText((data.settings && data.settings.home_about) ? data.settings.home_about : defaultMockData.settings.home_about);
-            document.getElementById('text-cocreate-desc').innerHTML = formatText((data.settings && data.settings.cocreate_desc) ? data.settings.cocreate_desc : defaultMockData.settings.cocreate_desc);
-            document.getElementById('text-about-heading').innerHTML = formatCoreValues((data.settings && data.settings.about_heading) ? data.settings.about_heading : defaultMockData.settings.about_heading);
-            document.getElementById('text-about-detail').innerHTML = formatText((data.settings && data.settings.about_detail) ? data.settings.about_detail : defaultMockData.settings.about_detail);
+            document.getElementById('text-core-values').innerHTML = formatCoreValues(finalSettings.core_values);
+            document.getElementById('text-home-about').innerHTML = formatText(finalSettings.home_about);
+            document.getElementById('text-cocreate-desc').innerHTML = formatText(finalSettings.cocreate_desc);
+            document.getElementById('text-about-heading').innerHTML = formatCoreValues(finalSettings.about_heading);
+            document.getElementById('text-about-detail').innerHTML = formatText(finalSettings.about_detail);
             
-            let s = data.settings || {};
-            document.getElementById('text-phone').innerText = s.phone || s.PHONE || defaultMockData.settings.phone;
-            document.getElementById('text-wechat').innerText = s.wechat || s.WECHAT || defaultMockData.settings.wechat;
-            document.getElementById('text-email').innerText = s.email || s.EMAIL || defaultMockData.settings.email;
+            document.getElementById('text-phone').innerText = finalSettings.phone || finalSettings.PHONE || defaultMockData.settings.phone;
+            document.getElementById('text-wechat').innerText = finalSettings.wechat || finalSettings.WECHAT || defaultMockData.settings.wechat;
+            document.getElementById('text-email').innerText = finalSettings.email || finalSettings.EMAIL || defaultMockData.settings.email;
             
-            const activeBanners = (data.banners && data.banners.length > 0) ? data.banners : defaultMockData.banners;
             setupBannerCarousel(activeBanners);
             
             const grids = { featured: document.getElementById('featured-grid'), spatial: document.getElementById('spatial-grid'), branding: document.getElementById('branding-grid'), events: document.getElementById('events-grid') };
             Object.values(grids).forEach(g => { if(g) g.innerHTML = ''; });
             
-            const activeCases = (data.cases && data.cases.length > 0) ? data.cases : defaultMockData.cases;
             activeCases.forEach(c => {
                 const imgArray = String(c.images || "").split(',');
                 const thumbnail = imgArray[0] ? imgArray[0].trim() : "";
@@ -332,8 +332,7 @@
             const currentSection = document.querySelector('.page-section.active');
             if(currentSection && currentSection.id !== 'case-detail') previousPageId = currentSection.id; 
             
-            const currentCases = (allGlobalData.cases && allGlobalData.cases.length > 0) ? allGlobalData.cases : defaultMockData.cases;
-            const targetCase = currentCases.find(c => c.id == id);
+            const targetCase = allGlobalData.cases.find(c => c.id == id);
             if (!targetCase) return;
             
             document.getElementById('detail-title').innerText = targetCase.title || '';
@@ -377,60 +376,39 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        document.getElementById('coform')?.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const name = document.getElementById('form-name').value;
-            const contact = document.getElementById('form-contact').value;
-            const message = document.getElementById('form-message').value;
-            
-            const params = new URLSearchParams();
-            params.append('name', name);
-            params.append('contact', contact);
-            params.append('message', message);
-            
-            try {
-                const response = await fetch('/api/data', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: params.toString()
-                });
-                
-                if (response.ok) {
-                    alert('✨ 您的共创想法已成功送达飞书数据库，团队将尽快与您取得联系！');
-                    this.reset();
-                } else {
-                    alert('正在为您接入飞书官方高安全登记通道...');
-                    window.open('https://xcn3g3vxlg7p.feishu.cn/share/base/form/shrcnYlsYdZ95Xry5W8ndaLDxgb', '_blank');
-                }
-            } catch (err) {
-                window.open('https://xcn3g3vxlg7p.feishu.cn/share/base/form/shrcnYlsYdZ95Xry5W8ndaLDxgb', '_blank');
-            }
-        });
-
+        // 💡 终极防卡死异步并发器
         async function init() {
-            try {
-                const res = await fetch('/api/data');
-                if (res.ok) {
-                    const data = await res.json();
-                    if(data && (data.settings || data.cases || data.banners)) { 
-                        renderAllContent(data); 
-                        return;
-                    }
+            let hasLoaded = false;
+            
+            // 快速本地降级兜底：如果0.8秒内接口都没反应，强制加载精美演示数据，绝不让客户等
+            const fallbackTimeout = setTimeout(() => {
+                if (!hasLoaded) {
+                    hasLoaded = true;
+                    renderAllContent(defaultMockData);
                 }
-            } catch (e) {}
+            }, 800);
 
             try {
                 const res = await fetch('./api/data.json');
-                if (res.ok) {
+                if (res.ok && !hasLoaded) {
                     const data = await res.json();
-                    if(data && (data.settings || data.cases || data.banners)) { 
-                        renderAllContent(data); 
-                        return;
-                    }
+                    clearTimeout(fallbackTimeout);
+                    hasLoaded = true;
+                    renderAllContent(data);
+                    return;
                 }
             } catch (e) {}
-            
-            renderAllContent(defaultMockData);
+
+            try {
+                const res = await fetch('/api/data');
+                if (res.ok && !hasLoaded) {
+                    const data = await res.json();
+                    clearTimeout(fallbackTimeout);
+                    hasLoaded = true;
+                    renderAllContent(data);
+                    return;
+                }
+            } catch (e) {}
         }
         window.onload = init;
     </script>
