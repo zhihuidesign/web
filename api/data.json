@@ -5,13 +5,29 @@
         "cocreate_desc": "知汇文化不仅承接设计服务，更积极参与未来产品的共同开发与销售。\n我们面向全球优秀的渠道方、技术方及工厂，开放生态合作入口：",
         "about_detail": "我们彻底打破了传统品牌设计公司臃肿低效机制。在知汇文化，没有初级实习生套模板接盘。\n作为商业场景的“全栈架构师”，知汇文化提供强有力的纯正创意灵魂。而重资产执行环节，则由我们严选并合作多年的顶级外部供应链无缝承接。"
     },
-    "banners": [],
+    "banners": [
+        {
+            "id": "01",
+            "title": "重塑城市物理边界：空间场景全案与标识导示深化交付",
+            "image": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2000&q=80"
+        },
+        {
+            "id": "02",
+            "title": "从超级符号到货架优势：顶尖品牌视觉资产驱动实效商业增长",
+            "image": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=2000&q=80"
+        },
+        {
+            "id": "03",
+            "title": "先锋数字舞美与沉浸公关会展：让线下交付转化为千万级自媒体声量",
+            "image": "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=2000&q=80"
+        }
+    ],
     "cases": [
         {
             "id": "01",
             "title": "华润综合体高端标识与动态导示系统设计全案",
             "category": "spatial",
-            "tag": "标识设计",
+            "tag": "设计",
             "desc": "针对高端客群商业购物动线进行精准视觉规划。\\n选用现代冷感建筑灰与精密发光字系统，打通线下空间的美学流动性。",
             "images": "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80",
             "featured": true
