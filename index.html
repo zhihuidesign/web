@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="知汇文化 ZHIHUI CULTURE - 空间场景、品牌视觉、活动展览、数字内容与共创合作服务。">
+    <title>知汇文化 | ZHIHUI CULTURE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #F4F4F4;
+        }
+        .page-section { opacity: 0; transition: opacity 0.4s ease-in-out; display: none; }
+        .page-section.active { opacity: 1; display: block; }
+        .font-heading { font-weight: 900; letter-spacing: -0.04em; }
+        p { margin-bottom: 1.5rem; line-height: 1.6; }
+        img, video { display: block; max-width: 100%; }
+        .media-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 180px;
+            background: #e5e5e5;
+            color: rgba(0, 0, 0, 0.45);
+            font-size: 12px;
+            letter-spacing: 0.08em;
+        }
+        .nav-link.is-active { opacity: 0.45; }
+    </style>
+</head>
+<body class="text-black antialiased">
+
+    <nav class="fixed top-0 left-0 w-full z-50 bg-[#F4F4F4]/90 backdrop-blur-md border-b border-black/5 px-6 py-6 md:px-12 flex justify-between items-center transition-colors duration-300" id="main-nav">
+        <a href="#home" data-page="home" class="font-heading text-xl md:text-2xl tracking-wider">ZHIHUI CULTURE.</a>
+        
+        <div class="hidden md:flex space-x-5 lg:space-x-7 font-medium text-[13px] lg:text-sm tracking-wide">
+            <a href="#home" data-page="home" class="nav-link text-black hover:opacity-50 transition-opacity">工作</a>
+            <a href="#spatial" data-page="spatial" class="nav-link text-black hover:opacity-50 transition-opacity">空间场景</a>
+            <a href="#branding" data-page="branding" class="nav-link text-black hover:opacity-50 transition-opacity">品牌视觉</a>
+            <a href="#events" data-page="events" class="nav-link text-black hover:opacity-50 transition-opacity">活动展览</a>
+            <a href="#digital" data-page="digital" class="nav-link text-black hover:opacity-50 transition-opacity">数字内容</a>
+            <a href="#cocreate" data-page="cocreate" class="nav-link text-black hover:opacity-50 transition-opacity">知汇共创</a>
+            <a href="#about" data-page="about" class="nav-link text-black hover:opacity-50 transition-opacity">关于知汇</a>
+        </div>
+        
+        <button type="button" class="md:hidden text-sm font-bold cursor-pointer select-none px-3 py-1 border border-black/10 rounded transition-all" id="mobile-menu-btn" aria-controls="mobile-dropdown" aria-expanded="false">MENU</button>
+        
+        <div id="mobile-dropdown" class="hidden absolute top-full left-0 w-full bg-[#F4F4F4] border-b border-black/10 flex flex-col px-6 py-4 space-y-2 font-medium text-sm shadow-xl transition-all duration-300">
+            <a href="#home" data-page="home" class="mobile-nav-link text-black py-2.5 border-b border-black/5">工作</a>
+            <a href="#spatial" data-page="spatial" class="mobile-nav-link text-black py-2.5 border-b border-black/5">空间场景</a>
+            <a href="#branding" data-page="branding" class="mobile-nav-link text-black py-2.5 border-b border-black/5">品牌视觉</a>
+            <a href="#events" data-page="events" class="mobile-nav-link text-black py-2.5 border-b border-black/5">活动展览</a>
+            <a href="#digital" data-page="digital" class="mobile-nav-link text-black py-2.5 border-b border-black/5">数字内容</a>
+            <a href="#cocreate" data-page="cocreate" class="mobile-nav-link text-black py-2.5 border-b border-black/5">知汇共创</a>
+            <a href="#about" data-page="about" class="mobile-nav-link text-black py-2.5">关于知汇</a>
+        </div>
+    </nav>
+
+    <div class="pt-24 min-h-screen flex flex-col justify-between">
+        <main class="px-6 md:px-12 pt-2 pb-12 space-y-16">
+            
+            <section id="home" class="page-section active space-y-12">
+                <div class="w-full relative overflow-hidden bg-neutral-300 aspect-[21/9] md:aspect-[3/1] border border-black/5 my-4 group" id="banner-slider-wrapper">
+                    <div id="banner-track" class="flex w-full h-full transition-transform duration-700 ease-[cubic-bezier(0.25,1,0.5,1)]"></div>
+                    <div id="banner-dots" class="absolute bottom-4 right-6 md:bottom-6 md:right-12 z-20 flex space-x-2.5 items-center"></div>
+                </div>
+                
+                <div class="text-center my-16 max-w-4xl mx-auto px-4 border-y border-black/5 py-12">
+                    <span class="font-mono text-xs text-black/40 tracking-widest uppercase block mb-4">// OUR VALUES 核心价值观</span>
+                    <h2 id="text-core-values" class="font-heading text-xl md:text-3xl leading-snug text-black/80">加载中...</h2>
+                </div>
+                
+                <div class="mb-8">
+                    <h2 class="font-heading text-xl md:text-2xl uppercase tracking-wider">Featured Projects / 精选推荐</h2>
+                </div>
+                <div id="featured-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-10"></div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 pt-20 border-t border-black/10 mt-24 mb-12">
+                    <div class="md:col-span-1"><h2 class="font-heading text-4xl md:text-6xl tracking-tighter leading-none">ZHIHUI<br>CULTURE.</h2></div>
+                    <div id="text-home-about" class="md:col-span-2 space-y-6 text-black/70 font-light text-sm md:text-base">加载中...</div>
+                </div>
+
+                <div class="border-t border-black/10 pt-10 mt-6 flex flex-col md:flex-row md:items-end md:justify-between gap-6 bg-white/35 p-6 md:p-8">
+                    <div class="max-w-2xl">
+                        <span class="font-mono text-xs text-black/40 tracking-widest uppercase block mb-3">// PROJECT INQUIRY 项目需求</span>
+                        <h2 class="font-heading text-2xl md:text-4xl leading-tight mb-4">有明确项目需求？<br class="hidden md:block">先提交简要背景。</h2>
+                        <p class="text-black/60 text-sm md:text-base font-light mb-0">为了减少无效沟通，建议先填写项目背景、服务类型、预算区间与联系方式。收到后，我会判断匹配度，再决定是否电话回访。</p>
+                    </div>
+                    <a id="home-lead-form-link" href="https://xcn3g3vxlg7p.feishu.cn/share/base/form/shrcnxjgB3sW5JXSNcGjy9xBcie" target="_blank" rel="noopener noreferrer" class="inline-block text-center bg-black text-white font-bold text-xs uppercase tracking-widest px-8 py-4 hover:bg-[#00FF66] hover:text-black transition-colors shrink-0">
+                        提交项目需求
+                    </a>
+                </div>
+            </section>
+
+            <section id="spatial" class="page-section space-y-12">
+                <div>
+                    <h1 class="font-heading text-4xl md:text-6xl mb-4">SPATIAL SCENE</h1>
+                    <p class="text-black/60 max-w-xl">标识导示系统 / 景观小品与商业美陈 / 店铺空间装修。让空间自带流量，优化客户动线。</p>
+                </div>
+                <div id="spatial-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
+            </section>
+
+            <section id="branding" class="page-section space-y-12">
+                <div>
+                    <h1 class="font-heading text-4xl md:text-6xl mb-4">BRAND IDENTITY</h1>
+                    <p class="text-black/60 max-w-xl">LOGO设计 / 完整VIS系统构建 / 高端书籍画册 / 产品营销包装。将文化转化为视觉资产。</p>
+                </div>
+                <div id="branding-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
+            </section>
+
+            <section id="events" class="page-section space-y-12">
+                <div>
+                    <h1 class="font-heading text-4xl md:text-6xl mb-4">EVENT EXHIBITION</h1>
+                    <p class="text-black/60 max-w-xl">发布会 / 展览会 / 快闪市集 / 活动主KV / 舞台舞美与落地物料。适合短周期、高曝光、要快速出效果的商业项目。</p>
+                </div>
+                <div id="events-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
+            </section>
+
+            <section id="digital" class="page-section space-y-12">
+                <div>
+                    <h1 class="font-heading text-4xl md:text-6xl mb-4">DIGITAL CONTENT</h1>
+                    <p class="text-black/60 max-w-xl">H5 / 网页 / 数字触点 / 短视频 / AI漫剧 / IP内容孵化。这里作为增长型能力入口，承接数字表达与内容实验，不抢占主业务焦点。</p>
+                </div>
+                <div id="digital-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
+            </section>
+
+            <section id="cocreate" class="page-section -mx-6 md:-mx-12 -mt-16 px-6 md:px-12 pt-0 pb-24 bg-[#1C1C1C] text-white space-y-16">
+                <div class="max-w-4xl">
+                    <span class="text-[#00FF66] font-mono tracking-widest text-sm uppercase block mb-2">// ZHIHUI CO-CREATION LAB</span>
+                    <h1 class="font-heading text-4xl md:text-6xl mb-6 leading-tight">打破传统甲乙方，<br>成为彼此的商业合伙人。</h1>
+                    <div id="text-cocreate-desc" class="text-white/60 text-lg font-light">加载中...</div>
+                </div>
+                
+                <div id="cocreate-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="border border-white/10 p-8 hover:border-[#00FF66] transition-colors">
+                        <div class="text-3xl mb-6">📦</div>
+                        <h3 class="text-xl font-bold mb-3">产品共同研发</h3>
+                        <p class="text-white/60 text-sm leading-relaxed">提供强设计和商业策略入股，与渠道和技术方共同打造爆款产品。</p>
+                    </div>
+                    <div class="border border-white/10 p-8 hover:border-[#00FF66] transition-colors">
+                        <div class="text-3xl mb-6">🧸</div>
+                        <h3 class="text-xl font-bold mb-3">文创与空间衍生品</h3>
+                        <p class="text-white/60 text-sm leading-relaxed">孵化自有独立周边，打通空间陈设和文创产品链条。</p>
+                    </div>
+                    <div class="border border-white/10 p-8 hover:border-[#00FF66] transition-colors">
+                        <div class="text-3xl mb-6">⚡</div>
+                        <h3 class="text-xl font-bold mb-3">优质生态供应链</h3>
+                        <p class="text-white/60 text-sm leading-relaxed">施工深化团队与优质制作工厂资源无缝整合，统一对客弹性交付。</p>
+                    </div>
+                </div>
+
+                <div class="max-w-xl mx-auto text-center border-t border-white/10 pt-12">
+                    <a id="cocreate-form-link" href="https://xcn3g3vxlg7p.feishu.cn/share/base/form/shrcnxjgB3sW5JXSNcGjy9xBcie" target="_blank" rel="noopener noreferrer" class="inline-block bg-[#00FF66] text-black font-bold text-xs uppercase tracking-widest px-8 py-4 hover:bg-white transition-colors">
+                        提交您的共创想法
+                    </a>
+                </div>
+            </section>
+
+            <section id="about" class="page-section space-y-12">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                    <div class="space-y-6">
+                        <div>
+                            <span class="font-mono text-xs text-black/40 tracking-widest uppercase block mb-2">SUPER INDIVIDUAL MODEL //</span>
+                            <h2 id="text-about-heading" class="font-heading text-3xl md:text-5xl leading-tight text-black">加载中...</h2>
+                        </div>
+                        <div id="text-about-detail" class="text-black/70 font-light text-sm md:text-base leading-relaxed">加载中...</div>
+                    </div>
+                    <div class="border border-black/10 p-8 bg-white flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-heading text-xl mb-6 uppercase tracking-wider">Business Contact / 商务联络</h3>
+                            <div class="space-y-4 text-sm">
+                                <p><strong class="block text-black/40 font-mono text-xs">FOUNDER PHONE</strong> <span id="text-phone" class="text-base font-medium">--</span></p>
+                                <p><strong class="block text-black/40 font-mono text-xs">FOUNDER WECHAT</strong> <span id="text-wechat" class="text-base font-medium">--</span></p>
+                                <p><strong class="block text-black/40 font-mono text-xs">EMAIL</strong> <span id="text-email" class="text-base font-medium">--</span></p>
+                                <p><strong class="block text-black/40 font-mono text-xs">OFFICE LOCATION</strong> <span id="text-office" class="text-base font-medium">中国 · 深圳</span></p>
+                            </div>
+                        </div>
+                        <div class="mt-12 pt-6 border-t border-black/5 text-xs text-black/40 leading-relaxed">
+                            <strong class="block text-black/60 mb-1">公账付款与商务签约主体：</strong>
+                            知汇（深圳）品牌文化有限公司<br>
+                            *本项目由知汇独立专家团队统一运营、统一开具正规增值税发票。
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="case-detail" class="page-section max-w-5xl mx-auto space-y-12">
+                <button type="button" id="back-to-list" class="font-heading text-xs uppercase tracking-widest border border-black px-4 py-2 hover:bg-black hover:text-white transition-colors mb-12">← BACK / 返回列表</button>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="md:col-span-2">
+                        <span id="detail-tag" class="font-mono text-xs text-black/40 tracking-wider block mb-2">--</span>
+                        <h1 id="detail-title" class="font-heading text-3xl md:text-5xl leading-tight mb-6">--</h1>
+                    </div>
+                    <div class="md:pt-7">
+                        <strong class="font-mono text-xs text-black/40 block mb-2">// 我方操盘案例 · 精选行业标杆补充</strong>
+                        <div id="detail-desc" class="text-sm text-black/70 leading-relaxed font-light">--</div>
+                    </div>
+                </div>
+                <div id="detail-images-flow" class="w-full space-y-12"></div>
+            </section>
+        </main>
+        
+        <footer class="border-t border-black/5 px-6 md:px-12 py-8 text-xs text-black/40 text-center">
+            © 2026 ZHIHUI CULTURE.
+        </footer>
+    </div>
+
+    <script>
+        let allGlobalData = { settings: {}, banners: [], cases: [], cocreate: [] };
+        let previousPageId = 'home';
+        let currentBannerIndex = 0;
+        let bannerTimer = null;
+
+        const defaultMockData = {
+            settings: {
+                core_values: "坚持纯正的创意灵魂，做有商业实效的设计。\n克制、精准、深度落地，让每一个物理场景都成为品牌的自媒体。",
+                home_about: "一个核心大脑，驱动一整条顶级供应链。\n知汇文化彻底打破了传统公司臃肿、层层汇报的低效机制。你的项目从策略定调到后期施工深化，全部由创意总监亲自操刀、一管到底。",
+                cocreate_desc: "知汇文化不仅承接设计服务，更积极参与未来产品的共同开发与销售。\n我们面向全球优秀的渠道方、技术方及工厂，开放生态合作入口：",
+                about_heading: "一个核心大脑，\n驱动一整条顶级供应链。",
+                about_detail: "我们彻底打破了传统品牌设计公司臃肿低效机制。在知汇文化，没有初级实习生套模板接盘。\n作为商业场景的“全栈架构师”，知汇文化提供强有力的纯正创意灵魂。而重资产执行环节，则由我们严选并合作多年的顶级外部供应链无缝承接。",
+                phone: "+86 186-6497-9841",
+                wechat: "joyhanDD",
+                email: "2664739667@qq.com",
+                office: "中国 · 深圳",
+                cocreate_form_url: "https://xcn3g3vxlg7p.feishu.cn/share/base/form/shrcnxjgB3sW5JXSNcGjy9xBcie",
+                lead_form_url: "https://xcn3g3vxlg7p.feishu.cn/share/base/form/shrcnxjgB3sW5JXSNcGjy9xBcie"
+            },
+            banners: [
+                { id: "b1", title: "知汇文化：做有商业实效的场景设计与空间美陈", image: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1600&q=80" },
+                { id: "b2", title: "深度操盘模式：从策略定调到后期施工一管到底", image: "https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=1600&q=80" }
+            ],
+            cases: [
+                { id: "demo1", title: "深圳大型商业广场标识导示系统全案", category: "spatial", tag: "标识导示 / 空间微改造", desc: "打破传统标识呆板印象，将品牌文化融入空间动线，提升商场坪效与视觉质感。", images: "https://images.unsplash.com/photo-1560179707-f14e90ef3623?auto=format&fit=crop&w=800&q=80", featured: true },
+                { id: "demo2", title: "知汇文化年度品牌VIS系统全面设计升级", category: "branding", tag: "品牌设计 / 视觉资产", desc: "构建极致理性的视觉美学体系，打造专属的黑白现代主义品牌自媒体符号。", images: "https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=800&q=80", featured: true },
+                { id: "demo3", title: "城市活动展览视觉与落地物料系统", category: "events", tag: "活动展览 / 快速交付", desc: "围绕主KV、舞台舞美、导视与物料延展，支持短周期、高曝光的商业活动。", images: "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=800&q=80", featured: true },
+                { id: "demo4", title: "品牌数字触点与H5传播页面", category: "digital", tag: "H5 / 网页 / 数字触点", desc: "把品牌视觉能力延展到移动端页面和传播触点，作为轻量级增长工具。", images: "https://images.unsplash.com/photo-1551650975-87deedd944c3?auto=format&fit=crop&w=800&q=80", featured: false },
+                { id: "demo5", title: "AI漫剧与IP内容孵化实验", category: "lab", tag: "实验室 / AI内容 / IP孵化", desc: "作为内容实验与未来业务储备，沉淀短视频、AI漫剧与IP化表达能力。", images: "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=800&q=80", featured: false }
+            ],
+            cocreate: [
+                { id: "1", icon: "📦", title: "产品共同研发", desc: "提供强设计和商业策略入股，与渠道和技术方共同打造爆款产品。" },
+                { id: "2", icon: "🧸", title: "文创与空间衍生品", desc: "孵化自有独立周边，打通空间陈设和文创产品链条。" },
+                { id: "3", icon: "⚡", title: "优质生态供应链", desc: "施工深化团队与优质制作工厂资源无缝整合，统一对客弹性交付。" }
+            ]
+        };
+
+        function parseText(value) {
+            if (value === null || value === undefined) return "";
+            if (Array.isArray(value)) return value.map(parseText).join("");
+            if (typeof value === "object") {
+                return String(value.text ?? value.name ?? value.value ?? value.url ?? value.link ?? "");
+            }
+            return String(value);
+        }
+
+        function escapeHTML(value) {
+            return parseText(value)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function formatText(text) {
+            return escapeHTML(text).replace(/\r?\n/g, '<br><br>');
+        }
+
+        function formatCoreValues(text) {
+            return escapeHTML(text).replace(/\r?\n/g, '<br>');
+        }
+
+        function extractUrls(value) {
+            const urls = [];
+            const urlReg = /https?:\/\/[^\s"'<>，,;；|\)\]\}]+/gi;
+
+            function pushUrl(raw) {
+                const clean = parseText(raw).trim();
+                if (!clean) return;
+                const matches = clean.match(urlReg);
+                if (matches) {
+                    matches.forEach(item => urls.push(item.trim()));
+                    return;
+                }
+                clean.split(/[\n，,;；|]+/).map(item => item.trim()).filter(Boolean).forEach(item => {
+                    if (isSafeMediaUrl(item)) urls.push(item);
+                });
+            }
+
+            function walk(input) {
+                if (!input) return;
+                if (Array.isArray(input)) {
+                    input.forEach(walk);
+                    return;
+                }
+                if (typeof input === "object") {
+                    ["url", "link", "tmp_url", "file_url", "text", "name"].forEach(key => {
+                        if (input[key]) pushUrl(input[key]);
+                    });
+                    return;
+                }
+                pushUrl(input);
+            }
+
+            walk(value);
+            return Array.from(new Set(urls));
+        }
+
+        function isSafeMediaUrl(url) {
+            try {
+                const parsed = new URL(parseText(url).trim(), window.location.href);
+                return parsed.protocol === 'http:' || parsed.protocol === 'https:' || parsed.protocol === 'blob:';
+            } catch (error) {
+                return false;
+            }
+        }
+
+        function isVideoUrl(url) {
+            const cleanUrl = parseText(url).trim();
+            if (!cleanUrl) return false;
+            try {
+                const parsed = new URL(cleanUrl, window.location.href);
+                return /\.(mp4|webm|m4v|mov)$/i.test(parsed.pathname);
+            } catch (error) {
+                return /\.(mp4|webm|m4v|mov)(\?|#|$)/i.test(cleanUrl);
+            }
+        }
+
+        function generateMediaTag(url, extraClass = "", hasControls = true, shouldAutoplay = true) {
+            const cleanUrl = parseText(url).trim();
+            const safeClass = escapeHTML(extraClass);
+            if (!cleanUrl || !isSafeMediaUrl(cleanUrl)) {
+                return '<div class="media-placeholder">媒体链接无效或为空</div>';
+            }
+            const safeUrl = escapeHTML(cleanUrl);
+            if (isVideoUrl(cleanUrl)) {
+                const controlsAttr = hasControls ? 'controls' : '';
+                const playAttrs = shouldAutoplay ? 'autoplay loop muted playsinline' : 'preload="metadata" muted playsinline';
+                return `<video src="${safeUrl}" ${controlsAttr} ${playAttrs} class="${safeClass}" referrerpolicy="no-referrer"></video>`;
+            }
+            return `<img src="${safeUrl}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" class="${safeClass}">`;
+        }
+
+        function normalizeBoolean(value) {
+            if (value === true || value === false) return value;
+            const text = parseText(value).trim().toLowerCase();
+            return ["true", "1", "是", "yes", "y", "首页", "推荐"].includes(text);
+        }
+
+        function normalizeCategory(value) {
+            const text = parseText(value).trim();
+            const lower = text.toLowerCase();
+            if (lower === "branding" || text.includes("品牌视觉") || text.includes("品牌")) return "branding";
+            if (lower === "events" || text.includes("活动展览") || text.includes("活动视觉") || text.includes("会展") || text.includes("展览") || text.includes("活动")) return "events";
+            if (lower === "digital" || text.includes("数字触点") || text.includes("H5") || text.includes("网页") || text.includes("网站") || text.includes("小程序") || text.includes("数字")) return "digital";
+            if (lower === "lab" || text.includes("实验室") || text.includes("短视频") || text.includes("AI") || text.includes("漫剧") || text.includes("IP") || text.includes("内容孵化")) return "lab";
+            return "spatial";
+        }
+
+        function normalizeData(data) {
+            const raw = data && typeof data === "object" ? data : {};
+            const settings = raw.settings && typeof raw.settings === "object" ? raw.settings : {};
+            const banners = Array.isArray(raw.banners) ? raw.banners.map((item, index) => {
+                const imageUrls = extractUrls(item.image ?? item["图片链接"] ?? item.url);
+                return {
+                    id: parseText(item.id ?? item["编号"] ?? `banner-${index + 1}`),
+                    title: parseText(item.title ?? item["广告标题"] ?? ""),
+                    image: imageUrls[0] || parseText(item.image ?? item["图片链接"] ?? "").trim()
+                };
+            }).filter(item => item.image) : [];
+
+            const cases = Array.isArray(raw.cases) ? raw.cases.map((item, index) => {
+                const mediaUrls = extractUrls(item.images ?? item["媒体集合"] ?? item["图片集合"] ?? item.image ?? item["图片链接"]);
+                return {
+                    id: parseText(item.id ?? item["编号"] ?? `case-${index + 1}`),
+                    title: parseText(item.title ?? item["项目标题"] ?? "未命名项目"),
+                    category: normalizeCategory(item.category ?? item["栏目分类"]),
+                    tag: parseText(item.tag ?? item["副标题"] ?? ""),
+                    desc: parseText(item.desc ?? item["项目简述"] ?? ""),
+                    images: mediaUrls.join(","),
+                    featured: normalizeBoolean(item.featured ?? item["是否上首页"])
+                };
+            }) : [];
+
+            const cocreate = Array.isArray(raw.cocreate) ? raw.cocreate.map((item, index) => ({
+                id: parseText(item.id ?? item["编号ID"] ?? item["编号"] ?? `cocreate-${index + 1}`),
+                icon: parseText(item.icon ?? item["图标"] ?? "").trim(),
+                title: parseText(item.title ?? item["标题"] ?? "").trim(),
+                desc: parseText(item.desc ?? item["描述"] ?? "").trim()
+            })).filter(item => item.title || item.desc) : [];
+
+            return { settings, banners, cases, cocreate };
+        }
+
+        function getSetting(settings, keys, fallback) {
+            for (const key of keys) {
+                if (settings[key] !== undefined && settings[key] !== null && parseText(settings[key]).trim() !== "") {
+                    return settings[key];
+                }
+            }
+            return fallback;
+        }
+
+        function renderCoCreateCards(items) {
+            const grid = document.getElementById('cocreate-grid');
+            if (!grid) return;
+            const fallbackIcons = ["📦", "🧸", "⚡", "✨", "🔗", "🧩"];
+            const list = items && items.length ? items : defaultMockData.cocreate;
+            grid.innerHTML = '';
+            list.forEach((item, index) => {
+                const icon = item.icon || fallbackIcons[index % fallbackIcons.length];
+                grid.insertAdjacentHTML('beforeend', `
+                    <div class="border border-white/10 p-8 hover:border-[#00FF66] transition-colors">
+                        <div class="text-3xl mb-6">${escapeHTML(icon)}</div>
+                        <h3 class="text-xl font-bold mb-3">${escapeHTML(item.title)}</h3>
+                        <p class="text-white/60 text-sm leading-relaxed">${formatText(item.desc)}</p>
+                    </div>
+                `);
+            });
+        }
+
+        function setupBannerCarousel(banners) {
+            const track = document.getElementById('banner-track');
+            const dotsContainer = document.getElementById('banner-dots');
+            const wrapper = document.getElementById('banner-slider-wrapper');
+            if (!track || !dotsContainer || !wrapper) return;
+
+            track.innerHTML = '';
+            dotsContainer.innerHTML = '';
+            stopBannerAutoPlay();
+            
+            if (!banners || banners.length === 0) {
+                wrapper.style.display = 'none';
+                return;
+            }
+            wrapper.style.display = 'block';
+
+            banners.forEach((banner, index) => {
+                const mediaHtml = generateMediaTag(banner.image, "w-full h-full object-cover", false, true);
+                track.insertAdjacentHTML('beforeend', `
+                    <div class="w-full h-full flex-shrink-0 relative" data-banner-slide="${index}">
+                        ${mediaHtml}
+                        <div class="absolute inset-0 bg-black/40 flex items-end pb-4 px-6 md:pb-6 md:px-12 pointer-events-none">
+                            <div class="text-white max-w-4xl mb-2 md:mb-4 pointer-events-auto">
+                                <span class="font-mono text-[10px] tracking-widest uppercase bg-black/60 px-2 py-1 mb-2 inline-block">// FOCUS / 深度操盘推介</span>
+                                <h2 class="font-heading text-lg md:text-2xl lg:text-3xl leading-tight">${escapeHTML(banner.title)}</h2>
+                            </div>
+                        </div>
+                    </div>
+                `);
+                dotsContainer.insertAdjacentHTML('beforeend', `<button type="button" data-banner-index="${index}" class="w-2.5 h-2.5 rounded-full border border-white/40 bg-white/20 transition-all duration-500 focus:outline-none" aria-label="切换到第 ${index + 1} 张焦点图"></button>`);
+            });
+
+            currentBannerIndex = 0;
+            updateBannerVisualState();
+            startBannerAutoPlay(banners.length);
+        }
+
+        function switchBannerTo(index) {
+            const dotsContainer = document.getElementById('banner-dots');
+            if (!dotsContainer) return;
+            const total = dotsContainer.children.length;
+            if (!total) return;
+            currentBannerIndex = ((Number(index) % total) + total) % total;
+            updateBannerVisualState();
+            startBannerAutoPlay(total);
+        }
+
+        function updateBannerVisualState() {
+            const track = document.getElementById('banner-track');
+            const dotsContainer = document.getElementById('banner-dots');
+            if (!track || !dotsContainer) return;
+            track.style.transform = `translateX(-${currentBannerIndex * 100}%)`;
+            Array.from(dotsContainer.children).forEach((dot, index) => {
+                const active = index === currentBannerIndex;
+                dot.classList.toggle('bg-white', active);
+                dot.classList.toggle('!w-6', active);
+                dot.classList.toggle('border-white', active);
+                dot.classList.toggle('bg-white/20', !active);
+                dot.classList.toggle('border-white/40', !active);
+            });
+            updateBannerMediaPlayback();
+        }
+
+        function updateBannerMediaPlayback() {
+            const slides = document.querySelectorAll('[data-banner-slide]');
+            slides.forEach((slide, index) => {
+                const video = slide.querySelector('video');
+                if (!video) return;
+                if (index === currentBannerIndex) {
+                    video.play().catch(() => {});
+                } else {
+                    video.pause();
+                }
+            });
+        }
+
+        function startBannerAutoPlay(total) {
+            stopBannerAutoPlay();
+            if (total <= 1) return;
+            bannerTimer = setInterval(() => {
+                currentBannerIndex = (currentBannerIndex + 1) % total;
+                updateBannerVisualState();
+            }, 4500);
+        }
+
+        function stopBannerAutoPlay() {
+            if (bannerTimer) clearInterval(bannerTimer);
+            bannerTimer = null;
+        }
+
+        function renderEmptyGrid(grid, text) {
+            if (!grid || grid.children.length > 0) return;
+            grid.innerHTML = `<div class="col-span-full border border-black/10 p-8 text-sm text-black/40 bg-white/40">${escapeHTML(text)}</div>`;
+        }
+
+        function renderAllContent(rawData) {
+            const data = normalizeData(rawData);
+            allGlobalData = data;
+            const settings = data.settings || {};
+            const fallbackSettings = defaultMockData.settings;
+            
+            document.getElementById('text-core-values').innerHTML = formatCoreValues(getSetting(settings, ['core_values', 'CORE_VALUES', '核心价值观'], fallbackSettings.core_values));
+            document.getElementById('text-home-about').innerHTML = formatText(getSetting(settings, ['home_about', 'HOME_ABOUT', '首页介绍'], fallbackSettings.home_about));
+            document.getElementById('text-cocreate-desc').innerHTML = formatText(getSetting(settings, ['cocreate_desc', 'COCREATE_DESC', '共创介绍'], fallbackSettings.cocreate_desc));
+            document.getElementById('text-about-heading').innerHTML = formatCoreValues(getSetting(settings, ['about_heading', 'ABOUT_HEADING', '关于标题'], fallbackSettings.about_heading));
+            document.getElementById('text-about-detail').innerHTML = formatText(getSetting(settings, ['about_detail', 'ABOUT_DETAIL', '关于详情'], fallbackSettings.about_detail));
+            
+            document.getElementById('text-phone').innerText = parseText(getSetting(settings, ['phone', 'PHONE', '电话', 'Founder Phone'], fallbackSettings.phone));
+            document.getElementById('text-wechat').innerText = parseText(getSetting(settings, ['wechat', 'WECHAT', '微信', 'Founder Wechat'], fallbackSettings.wechat));
+            document.getElementById('text-email').innerText = parseText(getSetting(settings, ['email', 'EMAIL', '邮箱'], fallbackSettings.email));
+            document.getElementById('text-office').innerText = parseText(getSetting(settings, ['office', 'OFFICE', '办公地点', '地址'], fallbackSettings.office));
+            const cocreateFormUrl = parseText(getSetting(settings, ['cocreate_form_url', 'FORM_URL', '共创表单链接', '合作表单链接', '客户线索表单链接'], fallbackSettings.cocreate_form_url)).trim();
+            const leadFormUrl = parseText(getSetting(settings, ['lead_form_url', '需求表单链接', '项目需求表单链接', '客户线索表单链接'], cocreateFormUrl || fallbackSettings.lead_form_url || fallbackSettings.cocreate_form_url)).trim();
+            if (cocreateFormUrl && isSafeMediaUrl(cocreateFormUrl)) document.getElementById('cocreate-form-link')?.setAttribute('href', cocreateFormUrl);
+            if (leadFormUrl && isSafeMediaUrl(leadFormUrl)) document.getElementById('home-lead-form-link')?.setAttribute('href', leadFormUrl);
+            
+            renderCoCreateCards(data.cocreate);
+
+            const activeBanners = data.banners.length > 0 ? data.banners : defaultMockData.banners;
+            setupBannerCarousel(activeBanners);
+            
+            const grids = {
+                featured: document.getElementById('featured-grid'),
+                spatial: document.getElementById('spatial-grid'),
+                branding: document.getElementById('branding-grid'),
+                events: document.getElementById('events-grid'),
+                digital: document.getElementById('digital-grid')
+            };
+            Object.values(grids).forEach(grid => { if (grid) grid.innerHTML = ''; });
+            
+            const activeCases = data.cases.length > 0 ? data.cases : defaultMockData.cases;
+            activeCases.forEach(item => {
+                const mediaList = extractUrls(item.images);
+                const thumbnail = mediaList[0] || '';
+                const cardMediaHtml = thumbnail
+                    ? generateMediaTag(thumbnail, "w-full h-full object-cover transform scale-100 group-hover:scale-105 transition-transform duration-500", false, false)
+                    : '<div class="media-placeholder w-full h-full">暂无媒体</div>';
+
+                const cardHtml = `
+                    <article class="group cursor-pointer" data-case-id="${escapeHTML(item.id)}" tabindex="0" role="button" aria-label="打开案例：${escapeHTML(item.title)}">
+                        <div class="overflow-hidden bg-neutral-200 aspect-[16/10] w-full mb-4 relative">
+                            ${cardMediaHtml}
+                        </div>
+                        <span class="font-mono text-[11px] text-black/40 tracking-wider block mb-1">${escapeHTML(item.tag)}</span>
+                        <h3 class="font-heading text-base md:text-lg leading-tight mb-2 group-hover:underline">${escapeHTML(item.title)}</h3>
+                        <p class="text-xs text-black/60 line-clamp-2 leading-relaxed">${formatText(item.desc)}</p>
+                    </article>`;
+                if (item.featured && grids.featured) grids.featured.insertAdjacentHTML('beforeend', cardHtml);
+                if (item.category === 'spatial' && grids.spatial) grids.spatial.insertAdjacentHTML('beforeend', cardHtml);
+                if (item.category === 'branding' && grids.branding) grids.branding.insertAdjacentHTML('beforeend', cardHtml);
+                if (item.category === 'events' && grids.events) grids.events.insertAdjacentHTML('beforeend', cardHtml);
+                if ((item.category === 'digital' || item.category === 'lab') && grids.digital) grids.digital.insertAdjacentHTML('beforeend', cardHtml);
+            });
+
+            renderEmptyGrid(grids.featured, '暂无精选项目。请在飞书 Cases 表中勾选“是否上首页”。');
+            renderEmptyGrid(grids.spatial, '暂无空间场景案例。');
+            renderEmptyGrid(grids.branding, '暂无品牌视觉案例。');
+            renderEmptyGrid(grids.events, '暂无活动展览案例。');
+            renderEmptyGrid(grids.digital, '暂无数字内容案例。数字触点和实验室案例都会出现在这里。');
+        }
+
+        function openCaseDetail(id) {
+            const currentSection = document.querySelector('.page-section.active');
+            if (currentSection && currentSection.id !== 'case-detail') previousPageId = currentSection.id;
+            const currentCases = allGlobalData.cases && allGlobalData.cases.length > 0 ? allGlobalData.cases : defaultMockData.cases;
+            const targetCase = currentCases.find(item => String(item.id) === String(id));
+            if (!targetCase) return;
+            
+            document.getElementById('detail-title').innerText = parseText(targetCase.title);
+            document.getElementById('detail-tag').innerText = parseText(targetCase.tag);
+            document.getElementById('detail-desc').innerHTML = formatText(targetCase.desc);
+            const flowContainer = document.getElementById('detail-images-flow');
+            flowContainer.innerHTML = '';
+            
+            const mediaList = extractUrls(targetCase.images);
+            if (mediaList.length === 0) {
+                flowContainer.innerHTML = '<div class="media-placeholder">暂无详情媒体</div>';
+            } else {
+                mediaList.forEach(url => {
+                    const detailMediaHtml = generateMediaTag(url, "w-full object-contain", true, false);
+                    flowContainer.insertAdjacentHTML('beforeend', `<div class="w-full bg-neutral-100">${detailMediaHtml}</div>`);
+                });
+            }
+            switchPage('case-detail');
+        }
+
+        function switchPage(pageId) {
+            const target = document.getElementById(pageId);
+            if (!target) return;
+            document.querySelectorAll('.page-section').forEach(section => section.classList.remove('active'));
+            target.classList.add('active');
+
+            const nav = document.getElementById('main-nav');
+            const mobileDrop = document.getElementById('mobile-dropdown');
+            const mobileBtn = document.getElementById('mobile-menu-btn');
+            const isDarkPage = pageId === 'cocreate';
+
+            document.body.style.backgroundColor = isDarkPage ? '#1C1C1C' : '#F4F4F4';
+            nav.style.backgroundColor = isDarkPage ? 'rgba(28, 28, 28, 0.9)' : 'rgba(244, 244, 244, 0.9)';
+            nav.classList.toggle('text-white', isDarkPage);
+            nav.classList.toggle('text-black', !isDarkPage);
+            if (mobileBtn) {
+                mobileBtn.classList.toggle('border-white/10', isDarkPage);
+                mobileBtn.classList.toggle('border-black/10', !isDarkPage);
+            }
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.toggle('text-white', isDarkPage);
+                link.classList.toggle('text-black', !isDarkPage);
+                link.classList.toggle('is-active', link.dataset.page === pageId);
+            });
+            if (mobileDrop) {
+                mobileDrop.style.backgroundColor = isDarkPage ? '#1C1C1C' : '#F4F4F4';
+                document.querySelectorAll('.mobile-nav-link').forEach(link => {
+                    link.classList.toggle('text-white', isDarkPage);
+                    link.classList.toggle('text-black', !isDarkPage);
+                    link.classList.toggle('border-white/5', isDarkPage);
+                    link.classList.toggle('border-black/5', !isDarkPage);
+                });
+            }
+
+            if (pageId !== 'home') stopBannerAutoPlay();
+            if (pageId === 'home') startBannerAutoPlay(document.getElementById('banner-dots')?.children.length || 0);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleMobileMenu(forceClose = false) {
+            const dropdown = document.getElementById('mobile-dropdown');
+            const button = document.getElementById('mobile-menu-btn');
+            if (!dropdown) return;
+            const shouldOpen = forceClose ? false : dropdown.classList.contains('hidden');
+            dropdown.classList.toggle('hidden', !shouldOpen);
+            if (button) button.setAttribute('aria-expanded', shouldOpen ? 'true' : 'false');
+        }
+
+        async function fetchJson(url) {
+            const response = await fetch(url, { cache: 'no-store' });
+            if (!response.ok) throw new Error(`读取失败：${response.status}`);
+            return response.json();
+        }
+
+        async function init() {
+            // 低维护稳定模式：优先读取 GitHub Action 同步出来的静态数据。
+            // 这样 Vercel 就算没有配置飞书密钥，网站也能稳定打开。
+            try {
+                const data = await fetchJson(`./api/data.json?t=${Date.now()}`);
+                if (data && (data.settings || data.cases || data.banners || data.cocreate)) {
+                    renderAllContent(data);
+                    return;
+                }
+            } catch (error) {
+                console.warn('静态数据暂不可用，尝试读取 Vercel API。', error);
+            }
+
+            // 可选实时模式：如果你在 Vercel 里也配置了飞书环境变量，这里会作为备用。
+            try {
+                const data = await fetchJson('/api/data');
+                if (data && (data.settings || data.cases || data.banners || data.cocreate)) {
+                    renderAllContent(data);
+                    return;
+                }
+            } catch (error) {
+                console.warn('Vercel API 暂不可用，使用默认演示数据。', error);
+            }
+            renderAllContent(defaultMockData);
+        }
+
+        document.addEventListener('click', event => {
+            const pageLink = event.target.closest('[data-page]');
+            if (pageLink) {
+                event.preventDefault();
+                switchPage(pageLink.dataset.page);
+                if (pageLink.classList.contains('mobile-nav-link')) toggleMobileMenu(true);
+                return;
+            }
+
+            const bannerDot = event.target.closest('[data-banner-index]');
+            if (bannerDot) {
+                switchBannerTo(Number(bannerDot.dataset.bannerIndex));
+                return;
+            }
+
+            const caseCard = event.target.closest('[data-case-id]');
+            if (caseCard) openCaseDetail(caseCard.dataset.caseId);
+        });
+
+        document.addEventListener('keydown', event => {
+            if ((event.key === 'Enter' || event.key === ' ') && event.target.matches('[data-case-id]')) {
+                event.preventDefault();
+                openCaseDetail(event.target.dataset.caseId);
+            }
+        });
+
+        document.getElementById('mobile-menu-btn')?.addEventListener('click', () => toggleMobileMenu());
+        document.getElementById('back-to-list')?.addEventListener('click', () => switchPage(previousPageId));
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>
