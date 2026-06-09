@@ -15,7 +15,13 @@
         .page-section.active { opacity: 1; display: block; }
         .font-heading { font-weight: 900; letter-spacing: -0.04em; }
         p { margin-bottom: 1.25rem; line-height: 1.6; }
-        br.zh-text-break { display: block; content: ""; margin-bottom: 0.75rem; }
+        .zh-paragraph-gap {
+            display: block;
+            height: 0.55rem;
+            margin: 0 !important;
+            padding: 0;
+            line-height: 0;
+        }
         img, video { display: block; max-width: 100%; }
         .media-placeholder {
             display: flex;
@@ -266,7 +272,13 @@
         }
 
         function formatText(text) {
-            return escapeHTML(text).replace(/\r?\n/g, '<br class="zh-text-break">');
+            const safeText = escapeHTML(text).trim();
+            if (!safeText) return "";
+            const paragraphs = safeText
+                .split(/\r?\n+/)
+                .map(item => item.trim())
+                .filter(Boolean);
+            return paragraphs.join('<span class="zh-paragraph-gap" aria-hidden="true"></span>');
         }
 
         function formatCoreValues(text) {
