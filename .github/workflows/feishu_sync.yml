@@ -1,0 +1,82 @@
+name: Sync Feishu Data and Deploy GitHub Pages
+
+on:
+  schedule:
+    # 每小时自动检查一次飞书表格。你也可以在 Actions 里手动点 Run workflow 立即更新。
+    - cron: '0 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: zhihui-pages
+  cancel-in-progress: false
+
+jobs:
+  sync-and-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Python dependencies
+        run: python -m pip install --upgrade requests
+
+      - name: Sync Feishu table to api/data.json
+        env:
+          FEISHU_APP_ID: ${{ secrets.FEISHU_APP_ID }}
+          FEISHU_APP_SECRET: ${{ secrets.FEISHU_APP_SECRET }}
+          FEISHU_APP_TOKEN: ${{ secrets.FEISHU_APP_TOKEN }}
+          # 下面是你当前飞书多维表格的 table_id，不是密钥。写在这里是为了更稳。
+          FEISHU_TABLE_SETTINGS: tbl4yj6yMn9b6TVB
+          FEISHU_TABLE_BANNERS: tbleKDTByw1PG3vB
+          FEISHU_TABLE_CASES: tblLbJOrvKnT2dHR
+          FEISHU_TABLE_COCREATE: CoCreate
+        run: python sync.py
+
+      - name: Commit updated data file
+        run: |
+          git config --global user.name "Feishu Sync Bot"
+          git config --global user.email "bot@github.com"
+          git add api/data.json
+          if git diff --cached --quiet; then
+            echo "No data changes."
+          else
+            git commit -m "Update Feishu data"
+            git push
+          fi
+
+      - name: Build safe static site folder
+        run: |
+          rm -rf _site
+          mkdir -p _site/api
+          cp index.html _site/index.html
+          cp api/data.json _site/api/data.json
+          if [ -f 404.html ]; then cp 404.html _site/404.html; fi
+          for dir in assets public images img css js; do
+            if [ -d "$dir" ]; then cp -R "$dir" "_site/$dir"; fi
+          done
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload GitHub Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
